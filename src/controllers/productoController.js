@@ -2,7 +2,11 @@ const pool = require('../config/db');
 
 const getAll = async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM PRODUCTO');
+    const [rows] = await pool.query(`
+      SELECT P.*, C.Nombre AS NombreCategoria 
+      FROM PRODUCTO P
+      LEFT JOIN CATEGORIA C ON P.IdCategoria = C.IdCategoria
+    `);
     res.json(rows);
   } catch (error) {
     console.error('Error al obtener productos:', error);
@@ -13,12 +17,17 @@ const getAll = async (req, res) => {
 const getById = async (req, res) => {
   try {
     const { id } = req.params;
-    const [rows] = await pool.query('SELECT * FROM PRODUCTO WHERE IdProducto = ?', [id]);
-    
+    const [rows] = await pool.query(`
+      SELECT P.*, C.Nombre AS NombreCategoria 
+      FROM PRODUCTO P
+      LEFT JOIN CATEGORIA C ON P.IdCategoria = C.IdCategoria
+      WHERE P.IdProducto = ?
+    `, [id]);
+
     if (rows.length === 0) {
       return res.status(404).json({ message: 'Producto no encontrado' });
     }
-    
+
     res.json(rows[0]);
   } catch (error) {
     console.error('Error al obtener producto por ID:', error);
