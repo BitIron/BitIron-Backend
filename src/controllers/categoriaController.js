@@ -80,11 +80,24 @@ const update = async (req, res) => {
   }
 };
 
-// Eliminar una categoría
+// Eliminar una categoría (con Borrado Controlado - Lógica de Negocio)
 const remove = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // 1. Lógica de negocio: Verificar si la categoría tiene productos asociados
+    const [productosAsociados] = await pool.query(
+      'SELECT COUNT(*) as count FROM PRODUCTO WHERE IdCategoria = ?',
+      [id]
+    );
+
+    if (productosAsociados[0].count > 0) {
+      return res.status(400).json({
+        message: 'No se puede eliminar la categoría porque tiene productos asociados. Reasigne o elimine los productos primero.'
+      });
+    }
+
+    // 2. Si no hay productos, procedemos a eliminar
     const [result] = await pool.query('DELETE FROM CATEGORIA WHERE IdCategoria = ?', [id]);
 
     if (result.affectedRows === 0) {
