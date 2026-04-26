@@ -1,12 +1,8 @@
-const pool = require('../config/db');
+const Producto = require('../models/productoModel');
 
 const getAll = async (req, res) => {
   try {
-    const [rows] = await pool.query(`
-      SELECT P.*, C.Nombre AS NombreCategoria 
-      FROM PRODUCTO P
-      LEFT JOIN CATEGORIA C ON P.IdCategoria = C.IdCategoria
-    `);
+    const rows = await Producto.getAll();
     res.json(rows);
   } catch (error) {
     console.error('Error al obtener productos:', error);
@@ -17,12 +13,7 @@ const getAll = async (req, res) => {
 const getById = async (req, res) => {
   try {
     const { id } = req.params;
-    const [rows] = await pool.query(`
-      SELECT P.*, C.Nombre AS NombreCategoria 
-      FROM PRODUCTO P
-      LEFT JOIN CATEGORIA C ON P.IdCategoria = C.IdCategoria
-      WHERE P.IdProducto = ?
-    `, [id]);
+    const rows = await Producto.getById(id);
 
     if (rows.length === 0) {
       return res.status(404).json({ message: 'Producto no encontrado' });
@@ -37,22 +28,7 @@ const getById = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    const {
-      Nombre, Descripcion, Precio, Stock, Imagen_Url,
-      Genero, Marca, ObjetivoRecomendado, Activo, IdCategoria
-    } = req.body;
-
-    const [result] = await pool.query(
-      `INSERT INTO PRODUCTO (
-        Nombre, Descripcion, Precio, Stock, Imagen_Url, 
-        Genero, Marca, ObjetivoRecomendado, Activo, IdCategoria
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        Nombre, Descripcion, Precio, Stock || 0, Imagen_Url,
-        Genero || 'unisex', Marca, ObjetivoRecomendado,
-        Activo !== undefined ? Activo : true, IdCategoria
-      ]
-    );
+    const result = await Producto.create(req.body);
 
     res.status(201).json({
       message: 'Producto creado exitosamente',
@@ -67,22 +43,7 @@ const create = async (req, res) => {
 const update = async (req, res) => {
   try {
     const { id } = req.params;
-    const {
-      Nombre, Descripcion, Precio, Stock, Imagen_Url,
-      Genero, Marca, ObjetivoRecomendado, Activo, IdCategoria
-    } = req.body;
-
-    const [result] = await pool.query(
-      `UPDATE PRODUCTO 
-       SET Nombre = ?, Descripcion = ?, Precio = ?, Stock = ?, 
-           Imagen_Url = ?, Genero = ?, Marca = ?, ObjetivoRecomendado = ?, 
-           Activo = ?, IdCategoria = ? 
-       WHERE IdProducto = ?`,
-      [
-        Nombre, Descripcion, Precio, Stock, Imagen_Url,
-        Genero, Marca, ObjetivoRecomendado, Activo, IdCategoria, id
-      ]
-    );
+    const result = await Producto.update(id, req.body);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: 'Producto no encontrado para actualizar' });
@@ -98,7 +59,7 @@ const update = async (req, res) => {
 const deleteProducto = async (req, res) => {
   try {
     const { id } = req.params;
-    const [result] = await pool.query('DELETE FROM PRODUCTO WHERE IdProducto = ?', [id]);
+    const result = await Producto.delete(id);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: 'Producto no encontrado para eliminar' });
