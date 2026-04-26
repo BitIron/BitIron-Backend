@@ -74,6 +74,13 @@ CREATE TABLE CARRITO (
     FechaAgregado TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE LOG_SISTEMA (
+    IdLog       INT AUTO_INCREMENT PRIMARY KEY,
+    Fecha       DATETIME(3) DEFAULT CURRENT_TIMESTAMP(3),
+    Proceso     VARCHAR(100) NOT NULL,
+    Descripcion TEXT NOT NULL
+);
+
 -- =========================================================================
 -- 3. RESTRICCIONES (Claves Foráneas y validaciones lógicas)
 -- =========================================================================
@@ -156,3 +163,35 @@ INSERT INTO CARRITO (IdCliente, IdProducto, Cantidad) VALUES
 (2, 5, 2);
 
 COMMIT;
+
+-- =========================================================================
+-- 5. PROCEDIMIENTOS ALMACENADOS
+-- =========================================================================
+
+DELIMITER //
+
+CREATE PROCEDURE sp_aplicar_descuento_marca(
+    IN p_marca VARCHAR(100),
+    IN p_porcentaje DECIMAL(5,2)
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        INSERT INTO LOG_SISTEMA (Proceso, Descripcion) 
+        VALUES ('sp_aplicar_descuento_marca', CONCAT('Error al aplicar descuento a la marca: ', p_marca));
+    END;
+
+    START TRANSACTION;
+
+    UPDATE PRODUCTO
+    SET Precio = Precio - (Precio * (p_porcentaje / 100))
+    WHERE Marca = p_marca;
+
+    INSERT INTO LOG_SISTEMA (Proceso, Descripcion) 
+    VALUES ('sp_aplicar_descuento_marca', CONCAT('Éxito: Aplicado ', p_porcentaje, '% de descuento a la marca: ', p_marca));
+
+    COMMIT;
+END //
+
+DELIMITER ;
