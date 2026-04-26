@@ -2,7 +2,9 @@ const Producto = require('../models/productoModel');
 
 const getAll = async (req, res) => {
   try {
-    const rows = await Producto.getAll();
+    const { nombre, idCategoria } = req.query;
+    const filtros = { nombre, idCategoria };
+    const rows = await Producto.getAll(filtros);
     res.json(rows);
   } catch (error) {
     console.error('Error al obtener productos:', error);

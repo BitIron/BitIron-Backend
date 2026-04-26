@@ -1,11 +1,26 @@
 const pool = require('../config/db');
 
-const getAll = async () => {
-  const [rows] = await pool.query(`
+const getAll = async (filtros = {}) => {
+  const { nombre, idCategoria } = filtros;
+  let query = `
     SELECT P.*, C.Nombre AS NombreCategoria 
     FROM PRODUCTO P
     LEFT JOIN CATEGORIA C ON P.IdCategoria = C.IdCategoria
-  `);
+    WHERE 1=1
+  `;
+  const params = [];
+
+  if (nombre) {
+    query += ` AND P.Nombre LIKE ?`;
+    params.push(`%${nombre}%`);
+  }
+
+  if (idCategoria) {
+    query += ` AND P.IdCategoria = ?`;
+    params.push(idCategoria);
+  }
+
+  const [rows] = await pool.query(query, params);
   return rows;
 };
 
