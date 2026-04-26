@@ -1,9 +1,9 @@
-const pool = require('../config/db');
+const Categoria = require('../models/categoriaModel');
 
 // Obtener todas las categorías
 const getAll = async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM CATEGORIA');
+    const rows = await Categoria.getAll();
     res.json(rows);
   } catch (error) {
     console.error('Error al obtener las categorías:', error);
@@ -15,7 +15,7 @@ const getAll = async (req, res) => {
 const getById = async (req, res) => {
   try {
     const { id } = req.params;
-    const [rows] = await pool.query('SELECT * FROM CATEGORIA WHERE IdCategoria = ?', [id]);
+    const rows = await Categoria.getById(id);
 
     if (rows.length === 0) {
       return res.status(404).json({ message: 'Categoría no encontrada' });
@@ -31,17 +31,14 @@ const getById = async (req, res) => {
 // Crear una nueva categoría
 const create = async (req, res) => {
   try {
-    const { Nombre, Descripcion, Imagen_Url } = req.body;
+    const { Nombre } = req.body;
 
     // Validación básica
     if (!Nombre) {
       return res.status(400).json({ message: 'El campo Nombre es obligatorio' });
     }
 
-    const [result] = await pool.query(
-      'INSERT INTO CATEGORIA (Nombre, Descripcion, Imagen_Url) VALUES (?, ?, ?)',
-      [Nombre, Descripcion || null, Imagen_Url || null]
-    );
+    const result = await Categoria.create(req.body);
 
     res.status(201).json({
       message: 'Categoría creada exitosamente',
@@ -57,17 +54,14 @@ const create = async (req, res) => {
 const update = async (req, res) => {
   try {
     const { id } = req.params;
-    const { Nombre, Descripcion, Imagen_Url } = req.body;
+    const { Nombre } = req.body;
 
     // Validación básica
     if (!Nombre) {
       return res.status(400).json({ message: 'El campo Nombre es obligatorio' });
     }
 
-    const [result] = await pool.query(
-      'UPDATE CATEGORIA SET Nombre = ?, Descripcion = ?, Imagen_Url = ? WHERE IdCategoria = ?',
-      [Nombre, Descripcion || null, Imagen_Url || null, id]
-    );
+    const result = await Categoria.update(id, req.body);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: 'Categoría no encontrada' });
@@ -86,19 +80,16 @@ const remove = async (req, res) => {
     const { id } = req.params;
 
     // 1. Lógica de negocio: Verificar si la categoría tiene productos asociados
-    const [productosAsociados] = await pool.query(
-      'SELECT COUNT(*) as count FROM PRODUCTO WHERE IdCategoria = ?',
-      [id]
-    );
+    const count = await Categoria.countProductos(id);
 
-    if (productosAsociados[0].count > 0) {
+    if (count > 0) {
       return res.status(400).json({
         message: 'No se puede eliminar la categoría porque tiene productos asociados. Reasigne o elimine los productos primero.'
       });
     }
 
     // 2. Si no hay productos, procedemos a eliminar
-    const [result] = await pool.query('DELETE FROM CATEGORIA WHERE IdCategoria = ?', [id]);
+    const result = await Categoria.delete(id);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: 'Categoría no encontrada' });
