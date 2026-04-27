@@ -17,6 +17,22 @@ const Carrito = {
       WHERE C.IdCliente = ?
     `, [idCliente]);
         return rows;
+    },
+
+    remove: async (idCarrito) => {
+        const [result] = await pool.query(
+            'DELETE FROM CARRITO WHERE IdCarrito = ?',
+            [idCarrito]
+        );
+        return result;
+    },
+
+    updateCantidad: async (idCarrito, cantidad) => {
+        const [result] = await pool.query(
+            'UPDATE CARRITO SET Cantidad = ? WHERE IdCarrito = ?',
+            [cantidad, idCarrito]
+        );
+        return result;
     }
 
 };
