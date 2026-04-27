@@ -1,20 +1,20 @@
-require('dotenv/config');
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const pool = require('./config/db');
+
 const categoriaRoutes = require('./routes/categoriaRoutes');
 const productoRoutes = require('./routes/productoRoutes');
-
-
-
-
+const carritoRoutes = require('./routes/carritoRoutes');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
 app.use('/api/categorias', categoriaRoutes);
 app.use('/api/productos', productoRoutes);
+app.use('/api/carrito', carritoRoutes);
 
 const PORT = process.env.PORT || 3000;
 
