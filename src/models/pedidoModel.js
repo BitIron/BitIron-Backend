@@ -93,6 +93,37 @@ const procesarCheckout = async (idCliente) => {
     }
 };
 
+const obtenerPedidosPorCliente = async (idCliente) => {
+    // 1. Obtenemos los pedidos principales del cliente (ordenados por el más reciente)
+    const [pedidos] = await pool.query(
+        'SELECT IdPedido, FechaPedido, TotalPagar FROM PEDIDO WHERE IdCliente = ? ORDER BY FechaPedido DESC',
+        [idCliente]
+    );
+
+    // Si no tiene pedidos, devolvemos un array vacío enseguida
+    if (pedidos.length === 0) return [];
+
+    // 2. Por cada pedido, buscamos sus detalles uniendo con la tabla PRODUCTO
+    for (let pedido of pedidos) {
+        const [detalles] = await pool.query(`
+            SELECT 
+                dp.Cantidad, 
+                dp.PrecioUnitario, 
+                p.Nombre, 
+                p.Imagen_Url 
+            FROM DETALLE_PEDIDO dp
+            JOIN PRODUCTO p ON dp.IdProducto = p.IdProducto
+            WHERE dp.IdPedido = ?
+        `, [pedido.IdPedido]);
+        
+        // Agregamos el array de productos dentro del objeto pedido
+        pedido.productos = detalles;
+    }
+
+    return pedidos;
+};
+
 module.exports = {
-    procesarCheckout
+    procesarCheckout,
+    obtenerPedidosPorCliente
 };
