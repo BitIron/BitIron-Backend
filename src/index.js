@@ -6,6 +6,7 @@ const pool = require('./config/db');
 const categoriaRoutes = require('./routes/categoriaRoutes');
 const productoRoutes = require('./routes/productoRoutes');
 const carritoRoutes = require('./routes/carritoRoutes');
+const pedidoRoutes = require('./routes/pedidoRoutes');
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use('/api/categorias', categoriaRoutes);
 app.use('/api/productos', productoRoutes);
 app.use('/api/carrito', carritoRoutes);
+app.use('/api/pedidos', pedidoRoutes);
 
 const PORT = process.env.PORT || 3000;
 
