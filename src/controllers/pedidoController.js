@@ -33,6 +33,21 @@ const realizarCheckout = async (req, res) => {
     }
 };
 
+const obtenerHistorial = async (req, res) => {
+    try {
+        const { idCliente } = req.params;
+        
+        // Llamamos al modelo para traer el historial completo
+        const historial = await Pedido.obtenerPedidosPorCliente(idCliente);
+        
+        res.json(historial);
+    } catch (error) {
+        console.error('Error al obtener el historial de pedidos:', error);
+        res.status(500).json({ error: 'Error interno del servidor al obtener el historial.' });
+    }
+};
+
 module.exports = {
-    realizarCheckout
+    realizarCheckout,
+    obtenerHistorial
 };
