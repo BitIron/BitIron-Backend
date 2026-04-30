@@ -1,16 +1,17 @@
 const productoModel = require('../models/productoModel');
+const planModel = require('../models/planModel');
 
 const generarPlan = async (req, res) => {
   try {
-    const { 
-      disciplina, objetivo, nivel, diasEntreno, 
-      tipoDieta, nivelSuplementacion, comidasAlDia = 4, 
-      horaEntreno 
+    const {
+      idCliente, disciplina, objetivo, nivel, diasEntreno,
+      tipoDieta, nivelSuplementacion, comidasAlDia = 4,
+      horaEntreno
     } = req.body;
 
     // Validación exhaustiva de parámetros críticos
-    if (!disciplina || !objetivo || !nivel || !diasEntreno || !tipoDieta || !nivelSuplementacion || !horaEntreno) {
-      return res.status(400).json({ error: 'Faltan parámetros críticos para la generación del plan de alto rendimiento (incluyendo horaEntreno).' });
+    if (!idCliente || !disciplina || !objetivo || !nivel || !diasEntreno || !tipoDieta || !nivelSuplementacion || !horaEntreno) {
+      return res.status(400).json({ error: 'Faltan parámetros críticos para la generación del plan de alto rendimiento (incluyendo idCliente y horaEntreno).' });
     }
 
     const horaNum = parseInt(horaEntreno.split(':')[0]);
@@ -22,7 +23,7 @@ const generarPlan = async (req, res) => {
     // ============================================================================
     // 1. PROGRAMACIÓN DE ENTRENAMIENTO (MÉTODO TS/BO + FALLO TÉCNICO + CIENCIA)
     // ============================================================================
-    
+
     const glosarioIntensidad = `
 === METODOLOGÍA DE ÉLITE: CIENCIA Y BIOMECÁNICA ===
 [ PRINCIPIOS DE HIPERTROFIA Y TENSIÓN MECÁNICA ]
@@ -38,7 +39,7 @@ const generarPlan = async (req, res) => {
 `;
 
     if (disciplina.toLowerCase() === 'musculacion' || disciplina.toLowerCase() === 'mixta') {
-      
+
       const calentamientoTorso = `
 [ CALENTAMIENTO ESPECÍFICO DE TORSO (8 MIN) ]
 1. Liberación miofascial: Pectoral y dorsal con pelota de lacrosse o rodillo (2 min).
@@ -193,7 +194,7 @@ Al ser un plan mixto, debes encajar este trabajo sin interferir en tus adaptacio
 - Sesión 2 (Potencia Aeróbica / HIIT): Calentamiento 10 min + 6 series de (40 seg sprint máximo / 80 seg caminar activo) + 10 min vuelta a la calma.
 `;
       }
-      
+
       rutina = glosarioIntensidad + cuerpoRutina;
 
     } else if (disciplina.toLowerCase() === 'aerobico') {
@@ -225,7 +226,7 @@ Este plan busca mejorar tu VO2 Máximo, tu umbral de lactato y tu economía de e
     // ============================================================================
     // 2. DIETA PERSONALIZADA CON TIMING NUTRICIONAL Y MULTI-OPCIONES MASIVAS
     // ============================================================================
-    
+
     // Asignación inteligente de comidas PRE y POST según la hora Y la cantidad de comidas
     let preWorkoutMeal, postWorkoutMeal;
 
@@ -236,12 +237,12 @@ Este plan busca mejorar tu VO2 Máximo, tu umbral de lactato y tu economía de e
       if (horaNum <= 11) { preWorkoutMeal = 1; postWorkoutMeal = 2; }
       else if (horaNum <= 16) { preWorkoutMeal = 2; postWorkoutMeal = 3; }
       else { preWorkoutMeal = 3; postWorkoutMeal = 4; }
-    } else { 
+    } else {
       // 5 o más comidas
       if (horaNum <= 10) { preWorkoutMeal = 1; postWorkoutMeal = 2; }
       else if (horaNum <= 14) { preWorkoutMeal = 2; postWorkoutMeal = 3; }
       else if (horaNum <= 18) { preWorkoutMeal = 3; postWorkoutMeal = 4; }
-      else { preWorkoutMeal = 4; postWorkoutMeal = 5; } 
+      else { preWorkoutMeal = 4; postWorkoutMeal = 5; }
     }
 
     let calorias, proteinas, carbos, grasas;
@@ -265,7 +266,7 @@ Al indicarnos que entrenas sobre las ${horaEntreno}, hemos estructurado tus comi
 
     // Generador dinámico del Menú Extenso
     for (let i = 1; i <= comidasAlDia; i++) {
-      
+
       let tituloComida = `[ COMIDA ${i} ]`;
       if (i === preWorkoutMeal) tituloComida += " - 🔥 PRE-ENTRENO 🔥";
       if (i === postWorkoutMeal) tituloComida += " - 🔨 POST-ENTRENO 🔨";
@@ -347,7 +348,7 @@ Al indicarnos que entrenas sobre las ${horaEntreno}, hemos estructurado tus comi
     // ============================================================================
     // 3. SUPLEMENTACIÓN (CONEXIÓN ESTRICTA CON BASE DE DATOS Y CROSS-SELLING)
     // ============================================================================
-    
+
     let suplementosRecomendados = [];
 
     if (nivelSuplementacion.toLowerCase() !== 'nada') {
@@ -367,14 +368,14 @@ Al indicarnos que entrenas sobre las ${horaEntreno}, hemos estructurado tus comi
       }
 
       try {
-        const promesasBusqueda = palabrasClaveSuplementos.map(palabra => 
+        const promesasBusqueda = palabrasClaveSuplementos.map(palabra =>
           productoModel.getAll({ nombre: palabra })
         );
-        
+
         const resultados = await Promise.all(promesasBusqueda);
         const productosEncontrados = resultados.flat();
         const idsAgregados = new Set();
-        
+
         for (const prod of productosEncontrados) {
           if (!idsAgregados.has(prod.IdProducto)) {
             // Asegurarse de enviar precio e imagen_url
@@ -416,8 +417,12 @@ Al indicarnos que entrenas sobre las ${horaEntreno}, hemos estructurado tus comi
     // ============================================================================
     // 4. RESPUESTA FINAL
     // ============================================================================
+
+    const idAsesoria = await planModel.guardarPlanGenerado(idCliente, disciplina, rutina, dieta);
+
     return res.status(200).json({
       mensaje: "Plan de Alto Rendimiento Generado Correctamente",
+      idAsesoria,
       configuracion: { disciplina, objetivo, nivel, diasEntreno, tipoDieta, comidasAlDia, horaEntreno, nivelSuplementacion },
       rutina,
       dieta,
