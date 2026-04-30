@@ -48,7 +48,9 @@ CREATE TABLE ASESORIA (
     FechaFin      DATE,
     PagadoAlDia   BOOLEAN NOT NULL DEFAULT FALSE,
     EstadoActivo  BOOLEAN DEFAULT TRUE,
-    IdCliente     INT NOT NULL
+    IdCliente     INT NOT NULL,
+    RutinaGenerada TEXT,
+    DietaGenerada TEXT
 );
 
 CREATE TABLE PEDIDO (

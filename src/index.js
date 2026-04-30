@@ -7,6 +7,7 @@ const categoriaRoutes = require('./routes/categoriaRoutes');
 const productoRoutes = require('./routes/productoRoutes');
 const carritoRoutes = require('./routes/carritoRoutes');
 const pedidoRoutes = require('./routes/pedidoRoutes');
+const planRoutes = require('./routes/planRoutes');
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use('/api/categorias', categoriaRoutes);
 app.use('/api/productos', productoRoutes);
 app.use('/api/carrito', carritoRoutes);
 app.use('/api/pedidos', pedidoRoutes);
+app.use('/api/planes', planRoutes);
 
 const PORT = process.env.PORT || 3000;
 
