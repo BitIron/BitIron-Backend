@@ -3,15 +3,16 @@ const planModel = require('../models/planModel');
 
 const generarPlan = async (req, res) => {
   try {
+    const idCliente = req.usuario.id;
+
     const {
-      idCliente, disciplina, objetivo, nivel, diasEntreno,
+      disciplina, objetivo, nivel, diasEntreno,
       tipoDieta, nivelSuplementacion, comidasAlDia = 4,
       horaEntreno
     } = req.body;
 
-    // Validación exhaustiva de parámetros críticos
-    if (!idCliente || !disciplina || !objetivo || !nivel || !diasEntreno || !tipoDieta || !nivelSuplementacion || !horaEntreno) {
-      return res.status(400).json({ error: 'Faltan parámetros críticos para la generación del plan de alto rendimiento (incluyendo idCliente y horaEntreno).' });
+    if (!disciplina || !objetivo || !nivel || !diasEntreno || !tipoDieta || !nivelSuplementacion || !horaEntreno) {
+      return res.status(400).json({ error: 'Faltan parámetros críticos para la generación del plan de alto rendimiento (incluyendo horaEntreno).' });
     }
 
     const horaNum = parseInt(horaEntreno.split(':')[0]);
