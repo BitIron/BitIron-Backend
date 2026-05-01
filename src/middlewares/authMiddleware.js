@@ -28,6 +28,16 @@ const verificarToken = (req, res, next) => {
     }
 };
 
+const esAdmin = (req, res, next) => {
+    if (req.usuario.rol !== 'admin') { 
+        return res.status(403).json({ 
+            error: 'Acceso denegado: Se requieren permisos de Administrador para esta acción.' 
+        });
+    }
+    next();
+};
+
 module.exports = {
-    verificarToken
+    verificarToken,
+    esAdmin
 };
