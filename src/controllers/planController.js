@@ -1,5 +1,6 @@
 const productoModel = require('../models/productoModel');
 const planModel = require('../models/planModel');
+const pool = require('../config/db');
 
 const generarPlan = async (req, res) => {
   try {
@@ -436,6 +437,17 @@ Al indicarnos que entrenas sobre las ${horaEntreno}, hemos estructurado tus comi
   }
 };
 
+const getHistorial = async (req, res) => {
+  try {
+    const [planes] = await pool.query('SELECT * FROM ASESORIA WHERE IdCliente = ?', [req.usuario.id]);
+    return res.status(200).json(planes);
+  } catch (error) {
+    console.error('Error al obtener el historial:', error);
+    return res.status(500).json({ error: 'Error interno del servidor al obtener el historial.' });
+  }
+};
+
 module.exports = {
-  generarPlan
+  generarPlan,
+  getHistorial
 };
