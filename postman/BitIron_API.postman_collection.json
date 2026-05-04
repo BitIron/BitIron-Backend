@@ -215,7 +215,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/productos?nombre=whey&idCategoria=1",
+              "raw": "{{baseUrl}}/productos?nombre=whey&idCategoria=1&page=1&limit=5",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -230,6 +230,14 @@
                 {
                   "key": "idCategoria",
                   "value": "1"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "5"
                 }
               ]
             }
