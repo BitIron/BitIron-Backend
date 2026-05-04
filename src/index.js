@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const pool = require('./config/db');
+const errorHandler = require('./middlewares/errorHandler');
 
 const categoriaRoutes = require('./routes/categoriaRoutes');
 const productoRoutes = require('./routes/productoRoutes');
@@ -21,6 +22,8 @@ app.use('/api/carrito', carritoRoutes);
 app.use('/api/pedidos', pedidoRoutes);
 app.use('/api/planes', planRoutes);
 app.use('/api/auth', authRoutes);
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 
