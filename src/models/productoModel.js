@@ -1,9 +1,10 @@
 const pool = require('../config/db');
 
-const getAll = async (filtros = {}) => {
+const getAll = async (filtros = {}, paginacion = { limit: 10, offset: 0 }) => {
   const { nombre, idCategoria } = filtros;
-  let query = `
-    SELECT P.*, C.Nombre AS NombreCategoria 
+  const { limit, offset } = paginacion;
+
+  let baseQuery = `
     FROM PRODUCTO P
     LEFT JOIN CATEGORIA C ON P.IdCategoria = C.IdCategoria
     WHERE 1=1
@@ -11,17 +12,32 @@ const getAll = async (filtros = {}) => {
   const params = [];
 
   if (nombre) {
-    query += ` AND P.Nombre LIKE ?`;
+    baseQuery += ` AND P.Nombre LIKE ?`;
     params.push(`%${nombre}%`);
   }
 
   if (idCategoria) {
-    query += ` AND P.IdCategoria = ?`;
+    baseQuery += ` AND P.IdCategoria = ?`;
     params.push(idCategoria);
   }
 
-  const [rows] = await pool.query(query, params);
-  return rows;
+  // 1. Obtener el total de registros que coinciden con los filtros (para los metadatos)
+  const [countResult] = await pool.query(`SELECT COUNT(*) as total ${baseQuery}`, params);
+  const total = countResult[0].total;
+
+  // 2. Obtener solo los registros de esta página
+  let dataQuery = `SELECT P.*, C.Nombre AS NombreCategoria ${baseQuery} LIMIT ? OFFSET ?`;
+  
+  // Clonamos el array de parámetros y añadimos limit y offset al final
+  // Se convierten a Number para que el driver de mysql los ponga sin comillas y no falle la sintaxis
+  const dataParams = [...params, Number(limit), Number(offset)];
+
+  const [rows] = await pool.query(dataQuery, dataParams);
+  
+  return {
+    total,
+    rows
+  };
 };
 
 const getById = async (id) => {

@@ -8,10 +8,6 @@ const registro = async (req, res) => {
     try {
         const { nombreCompleto, email, password } = req.body;
 
-        if (!nombreCompleto || !email || !password) {
-            return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
-        }
-
         // Verificar si el email ya existe
         const [usuariosExistentes] = await pool.query('SELECT * FROM CLIENTE WHERE Email = ?', [email]);
         if (usuariosExistentes.length > 0) {
@@ -39,10 +35,6 @@ const registro = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-
-        if (!email || !password) {
-            return res.status(400).json({ error: 'Email y contraseña son obligatorios.' });
-        }
 
         // Buscar al usuario por su email
         const [usuarios] = await pool.query('SELECT * FROM CLIENTE WHERE Email = ?', [email]);

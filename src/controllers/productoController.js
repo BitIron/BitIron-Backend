@@ -2,10 +2,31 @@ const Producto = require('../models/productoModel');
 
 const getAll = async (req, res) => {
   try {
-    const { nombre, idCategoria } = req.query;
+    const { nombre, idCategoria, page = 1, limit = 10 } = req.query;
+    
+    // Convertir a números y asegurar que sean positivos
+    const pageNum = parseInt(page, 10) > 0 ? parseInt(page, 10) : 1;
+    const limitNum = parseInt(limit, 10) > 0 ? parseInt(limit, 10) : 10;
+    
+    // Calcular cuántos registros saltarse (offset)
+    const offset = (pageNum - 1) * limitNum;
+
     const filtros = { nombre, idCategoria };
-    const rows = await Producto.getAll(filtros);
-    res.json(rows);
+    const paginacion = { limit: limitNum, offset };
+
+    const result = await Producto.getAll(filtros, paginacion);
+    
+    const totalPages = Math.ceil(result.total / limitNum);
+
+    res.json({
+      data: result.rows,
+      meta: {
+        totalItems: result.total,
+        totalPages: totalPages,
+        currentPage: pageNum,
+        itemsPerPage: limitNum
+      }
+    });
   } catch (error) {
     console.error('Error al obtener productos:', error);
     res.status(500).json({ message: 'Error interno del servidor', error: error.message });
