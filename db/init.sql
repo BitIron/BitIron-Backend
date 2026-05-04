@@ -145,10 +145,16 @@ INSERT INTO PRODUCTO (IdProducto, Nombre, Descripcion, Precio, Stock, Genero, Ma
 (4, 'Camiseta Oversize',     'Algodon premium negro.',  22.00, 60,  'unisex', 'BIT-ITRON', 'Estetica',   3),
 (5, 'Quemador L-Carnitina',  'Acelera perdida grasa.',  19.99, 40,  'unisex', 'Amix',      'Definicion', 1);
 
+-- =========================================================================
+-- CREDENCIALES DE PRUEBA (para desarrollo local)
+-- juan@example.com   / Cliente1234!  -> rol: cliente
+-- ana@example.com    / Cliente1234!  -> rol: cliente
+-- admin@bitiron.com  / Admin1234!    -> rol: admin
+-- =========================================================================
 INSERT INTO CLIENTE (IdCliente, NombreCompleto, Email, Password_Hash, Rol, ObjetivoFitness) VALUES
-(1, 'Juan Garcia', 'juan@example.com', 'hash_1', 'cliente', 'Volumen'),
-(2, 'Ana Lopez',   'ana@example.com',  'hash_2', 'cliente', 'Definicion'),
-(3, 'Admin BIT',   'admin@bitiron.com','hash_3', 'admin',   NULL);
+(1, 'Juan Garcia', 'juan@example.com',  '$2b$10$XotUwqDbccwXtrIga5aLt.S526HQ1c01F57fh4fLWxMDEgDW7akdm', 'cliente', 'Volumen'),
+(2, 'Ana Lopez',   'ana@example.com',   '$2b$10$OG3qmVe3QxRW74O2ZQkblueSF50l.ASs/7BxuzjsQLDeeluJo4dpm', 'cliente', 'Definicion'),
+(3, 'Admin BIT',   'admin@bitiron.com', '$2b$10$kZk7JQsm/t16Z2ptbUC/veDvmpxKtmd2tfEJewjrEtLKLxb8DZ98C', 'admin',   NULL);
 
 INSERT INTO ASESORIA (IdCliente, TipoPlan, PrecioMensual, FechaInicio, PagadoAlDia) VALUES
 (1, 'Volumen',    49.99, '2025-04-01', TRUE),
