@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const rateLimit = require('express-rate-limit');
-const { registroValidator, loginValidator } = require('../validators/authValidator'); // Importamos los validadores
-
+const { registroValidator, loginValidator } = require('../validators/authValidator');
 const authController = require('../controllers/authController');
+const { verificarToken } = require('../middlewares/authMiddleware');
 
 const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutos
@@ -15,7 +15,9 @@ const loginLimiter = rateLimit({
 
 // Rutas de autenticación con validaciones inyectadas
 router.post('/registro', registroValidator, authController.registro);
-
 router.post('/login', loginLimiter, loginValidator, authController.login);
+
+// Ruta protegida: devuelve los datos del usuario autenticado
+router.get('/perfil', verificarToken, authController.perfil);
 
 module.exports = router;
