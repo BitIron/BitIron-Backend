@@ -93,10 +93,17 @@ const remove = async (id) => {
   return result;
 };
 
+const aplicarDescuentoMarca = async (marca, porcentaje) => {
+  // Llama al Stored Procedure que hemos creado en la base de datos
+  const [result] = await pool.query('CALL sp_aplicar_descuento_marca(?, ?)', [marca, porcentaje]);
+  return result;
+};
+
 module.exports = {
   getAll,
   getById,
   create,
   update,
-  delete: remove
+  delete: remove,
+  aplicarDescuentoMarca
 };
