@@ -73,7 +73,29 @@ const login = async (req, res) => {
     }
 };
 
+const perfil = async (req, res) => {
+    try {
+        // req.usuario viene inyectado por el middleware verificarToken
+        const { id } = req.usuario;
+
+        const [rows] = await pool.query(
+            'SELECT IdCliente, NombreCompleto, Email, Rol, ObjetivoFitness FROM CLIENTE WHERE IdCliente = ?',
+            [id]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'Usuario no encontrado.' });
+        }
+
+        return res.status(200).json({ usuario: rows[0] });
+    } catch (error) {
+        console.error('Error al obtener perfil:', error);
+        return res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+};
+
 module.exports = {
     registro,
-    login
+    login,
+    perfil
 };
