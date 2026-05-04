@@ -416,7 +416,28 @@ Al indicarnos que entrenas sobre las ${horaEntreno}, hemos estructurado tus comi
     }
 
     // ============================================================================
-    // 4. RESPUESTA FINAL
+    // 4. CROSS-SELLING (VENTA CRUZADA)
+    // ============================================================================
+    
+    const pool = require('../config/db');
+    let tiendaRecomendaciones = [];
+    
+    try {
+      const [productosCrossSelling] = await pool.query(
+        `SELECT IdProducto, Nombre, Descripcion, Precio, Marca, ObjetivoRecomendado 
+         FROM PRODUCTO 
+         WHERE ObjetivoRecomendado LIKE ? AND Stock > 0
+         ORDER BY RAND() 
+         LIMIT 3`,
+        [`%${objetivo}%`]
+      );
+      tiendaRecomendaciones = productosCrossSelling;
+    } catch (errorDb) {
+      console.error("Error al obtener recomendaciones de Cross-Selling:", errorDb);
+    }
+
+    // ============================================================================
+    // 5. RESPUESTA FINAL
     // ============================================================================
 
     const idAsesoria = await planModel.guardarPlanGenerado(idCliente, disciplina, rutina, dieta);
@@ -427,7 +448,8 @@ Al indicarnos que entrenas sobre las ${horaEntreno}, hemos estructurado tus comi
       configuracion: { disciplina, objetivo, nivel, diasEntreno, tipoDieta, comidasAlDia, horaEntreno, nivelSuplementacion },
       rutina,
       dieta,
-      suplementosRecomendados
+      suplementosRecomendados,
+      tiendaRecomendaciones
     });
 
   } catch (error) {
