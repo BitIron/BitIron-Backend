@@ -3,11 +3,11 @@ const Producto = require('../models/productoModel');
 const getAll = async (req, res) => {
   try {
     const { nombre, idCategoria, page = 1, limit = 10 } = req.query;
-    
+
     // Convertir a números y asegurar que sean positivos
     const pageNum = parseInt(page, 10) > 0 ? parseInt(page, 10) : 1;
     const limitNum = parseInt(limit, 10) > 0 ? parseInt(limit, 10) : 10;
-    
+
     // Calcular cuántos registros saltarse (offset)
     const offset = (pageNum - 1) * limitNum;
 
@@ -15,7 +15,7 @@ const getAll = async (req, res) => {
     const paginacion = { limit: limitNum, offset };
 
     const result = await Producto.getAll(filtros, paginacion);
-    
+
     const totalPages = Math.ceil(result.total / limitNum);
 
     res.json({
@@ -95,10 +95,35 @@ const deleteProducto = async (req, res) => {
   }
 };
 
+const aplicarDescuentoMarca = async (req, res) => {
+  try {
+    const { marca, porcentaje } = req.body;
+
+    if (!marca || !porcentaje) {
+      return res.status(400).json({ message: 'La marca y el porcentaje son obligatorios' });
+    }
+
+    // El porcentaje no debe ser mayor a 100 ni menor a 0
+    if (porcentaje <= 0 || porcentaje > 100) {
+      return res.status(400).json({ message: 'El porcentaje debe estar entre 1 y 100' });
+    }
+
+    await Producto.aplicarDescuentoMarca(marca, porcentaje);
+
+    res.json({
+      message: `Descuento del ${porcentaje}% aplicado exitosamente a la marca ${marca}. Revisa el log del sistema en la BD.`
+    });
+  } catch (error) {
+    console.error('Error al aplicar descuento por marca:', error);
+    res.status(500).json({ message: 'Error al aplicar el descuento', error: error.message });
+  }
+};
+
 module.exports = {
   getAll,
   getById,
   create,
   update,
-  delete: deleteProducto
+  delete: deleteProducto,
+  aplicarDescuentoMarca
 };
