@@ -11,6 +11,7 @@ const carritoRoutes = require('./routes/carritoRoutes');
 const pedidoRoutes = require('./routes/pedidoRoutes');
 const planRoutes = require('./routes/planRoutes');
 const authRoutes = require('./routes/authRoutes');
+const asesoriaRoutes = require('./routes/asesoriaRoutes');
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use('/api/carrito', carritoRoutes);
 app.use('/api/pedidos', pedidoRoutes);
 app.use('/api/planes', planRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/asesorias', asesoriaRoutes);
 
 app.use(errorHandler);
 
