@@ -15,9 +15,8 @@ const authRoutes = require('./routes/authRoutes');
 const app = express();
 
 // ─── Rate Limiting Global ─────────────────────────────────────────────────────
-// Protege toda la API: máximo 100 peticiones por IP cada 15 minutos
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
+  windowMs: 15 * 60 * 1000,
   max: 100,
   message: { error: 'Demasiadas peticiones desde esta IP. Por favor, inténtalo de nuevo en 15 minutos.' },
   standardHeaders: true,
@@ -26,7 +25,7 @@ const apiLimiter = rateLimit({
 
 app.use(cors());
 app.use(express.json());
-app.use('/api', apiLimiter); // Aplica a TODAS las rutas /api/*
+app.use('/api', apiLimiter);
 
 app.use('/api/categorias', categoriaRoutes);
 app.use('/api/productos', productoRoutes);

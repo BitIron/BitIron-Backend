@@ -6,7 +6,11 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --forceExit"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": ["**/tests/**/*.test.js"]
   },
   "keywords": [],
   "author": "",
@@ -20,5 +24,9 @@
     "express-validator": "^7.3.2",
     "jsonwebtoken": "^9.0.3",
     "mysql2": "^3.22.2"
+  },
+  "devDependencies": {
+    "jest": "^30.3.0",
+    "supertest": "^7.2.2"
   }
 }
