@@ -94,8 +94,30 @@ const perfil = async (req, res) => {
     }
 };
 
+const updatePerfil = async (req, res) => {
+    try {
+        const id = req.usuario.id; // Obtenido del token por el middleware
+        const { nombreCompleto, objetivoFitness } = req.body;
+
+        const [result] = await pool.query(
+            'UPDATE CLIENTE SET NombreCompleto = ?, ObjetivoFitness = ? WHERE IdCliente = ?',
+            [nombreCompleto, objetivoFitness, id]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Usuario no encontrado.' });
+        }
+
+        return res.status(200).json({ mensaje: 'Perfil actualizado correctamente.' });
+    } catch (error) {
+        console.error('Error al actualizar perfil:', error);
+        return res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+};
+
 module.exports = {
     registro,
     login,
-    perfil
+    perfil,
+    updatePerfil
 };

@@ -17,7 +17,8 @@ const loginLimiter = rateLimit({
 router.post('/registro', registroValidator, authController.registro);
 router.post('/login', loginLimiter, loginValidator, authController.login);
 
-// Ruta protegida: devuelve los datos del usuario autenticado
+// Rutas protegidas: perfil
 router.get('/perfil', verificarToken, authController.perfil);
+router.put('/perfil', verificarToken, authController.updatePerfil);
 
 module.exports = router;
