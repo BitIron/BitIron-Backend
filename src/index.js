@@ -12,6 +12,7 @@ const pedidoRoutes = require('./routes/pedidoRoutes');
 const planRoutes = require('./routes/planRoutes');
 const authRoutes = require('./routes/authRoutes');
 const asesoriaRoutes = require('./routes/asesoriaRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use('/api/pedidos', pedidoRoutes);
 app.use('/api/planes', planRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/asesorias', asesoriaRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.use(errorHandler);
 
