@@ -19,6 +19,7 @@ const getAll = async (req, res) => {
     const totalPages = Math.ceil(result.total / limitNum);
 
     res.json({
+      success: true,
       data: result.rows,
       meta: {
         totalItems: result.total,

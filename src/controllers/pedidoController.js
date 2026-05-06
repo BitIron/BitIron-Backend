@@ -63,10 +63,10 @@ const actualizarEstado = async (req, res) => {
             return res.status(404).json({ error: 'Pedido no encontrado.' });
         }
 
-        res.json({ message: 'Estado del pedido actualizado con éxito.' });
+        res.json({ success: true, message: 'Estado del pedido actualizado con éxito.' });
     } catch (error) {
         console.error('Error al actualizar el estado del pedido:', error);
-        res.status(500).json({ error: 'Error interno del servidor.' });
+        res.status(500).json({ success: false, error: 'Error interno del servidor.' });
     }
 };
 
