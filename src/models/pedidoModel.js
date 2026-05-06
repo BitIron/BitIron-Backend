@@ -80,7 +80,7 @@ const procesarCheckout = async (idCliente) => {
 
         // 8. Confirmar la transacción
         await connection.commit();
-        
+
         return idPedido;
 
     } catch (error) {
@@ -96,7 +96,7 @@ const procesarCheckout = async (idCliente) => {
 const obtenerPedidosPorCliente = async (idCliente) => {
     // 1. Obtenemos los pedidos principales del cliente (ordenados por el más reciente)
     const [pedidos] = await pool.query(
-        'SELECT IdPedido, FechaPedido, TotalPagar FROM PEDIDO WHERE IdCliente = ? ORDER BY FechaPedido DESC',
+        'SELECT IdPedido, FechaPedido, TotalPagar, Estado FROM PEDIDO WHERE IdCliente = ? ORDER BY FechaPedido DESC',
         [idCliente]
     );
 
@@ -115,7 +115,7 @@ const obtenerPedidosPorCliente = async (idCliente) => {
             JOIN PRODUCTO p ON dp.IdProducto = p.IdProducto
             WHERE dp.IdPedido = ?
         `, [pedido.IdPedido]);
-        
+
         // Agregamos el array de productos dentro del objeto pedido
         pedido.productos = detalles;
     }
@@ -123,7 +123,16 @@ const obtenerPedidosPorCliente = async (idCliente) => {
     return pedidos;
 };
 
+const actualizarEstadoPedido = async (idPedido, nuevoEstado) => {
+    const [result] = await pool.query(
+        'UPDATE PEDIDO SET Estado = ? WHERE IdPedido = ?',
+        [nuevoEstado, idPedido]
+    );
+    return result.affectedRows > 0;
+};
+
 module.exports = {
     procesarCheckout,
-    obtenerPedidosPorCliente
+    obtenerPedidosPorCliente,
+    actualizarEstadoPedido
 };

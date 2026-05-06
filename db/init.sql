@@ -57,6 +57,7 @@ CREATE TABLE PEDIDO (
     IdPedido    INT AUTO_INCREMENT PRIMARY KEY,
     FechaPedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     TotalPagar  DECIMAL(10,2) NOT NULL DEFAULT 0,
+    Estado      ENUM('Pendiente', 'Pagado', 'Enviado', 'Entregado', 'Cancelado') NOT NULL DEFAULT 'Pendiente',
     IdCliente   INT NOT NULL
 );
 

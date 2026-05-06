@@ -21,7 +21,7 @@ const realizarCheckout = async (req, res) => {
 
         // Si es un error de negocio (carrito vacío, stock insuficiente) devolvemos un 400
         if (
-            error.message.includes('vacío') || 
+            error.message.includes('vacío') ||
             error.message.includes('Stock insuficiente') ||
             error.message.includes('ya no existe')
         ) {
@@ -36,10 +36,10 @@ const realizarCheckout = async (req, res) => {
 const obtenerHistorial = async (req, res) => {
     try {
         const { idCliente } = req.params;
-        
+
         // Llamamos al modelo para traer el historial completo
         const historial = await Pedido.obtenerPedidosPorCliente(idCliente);
-        
+
         res.json(historial);
     } catch (error) {
         console.error('Error al obtener el historial de pedidos:', error);
@@ -47,7 +47,31 @@ const obtenerHistorial = async (req, res) => {
     }
 };
 
+const actualizarEstado = async (req, res) => {
+    try {
+        const { idPedido } = req.params;
+        const { nuevoEstado } = req.body;
+
+        const estadosValidos = ['Pendiente', 'Pagado', 'Enviado', 'Entregado', 'Cancelado'];
+        if (!estadosValidos.includes(nuevoEstado)) {
+            return res.status(400).json({ error: 'Estado no válido.' });
+        }
+
+        const actualizado = await Pedido.actualizarEstadoPedido(idPedido, nuevoEstado);
+
+        if (!actualizado) {
+            return res.status(404).json({ error: 'Pedido no encontrado.' });
+        }
+
+        res.json({ message: 'Estado del pedido actualizado con éxito.' });
+    } catch (error) {
+        console.error('Error al actualizar el estado del pedido:', error);
+        res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+};
+
 module.exports = {
     realizarCheckout,
-    obtenerHistorial
+    obtenerHistorial,
+    actualizarEstado
 };
