@@ -4,8 +4,25 @@ const CustomError = require('../utils/CustomError');
 
 // Obtener todas las categorías
 const getAll = catchAsync(async (req, res, next) => {
-    const rows = await Categoria.getAll();
-    res.json(rows);
+    const { page = 1, limit = 10 } = req.query;
+    const pageNum = parseInt(page, 10) > 0 ? parseInt(page, 10) : 1;
+    const limitNum = parseInt(limit, 10) > 0 ? parseInt(limit, 10) : 10;
+    const offset = (pageNum - 1) * limitNum;
+
+    const result = await Categoria.getAll({ limit: limitNum, offset });
+
+    const totalPages = Math.ceil(result.total / limitNum);
+
+    res.json({
+        success: true,
+        data: result.rows,
+        meta: {
+            totalItems: result.total,
+            totalPages: totalPages,
+            currentPage: pageNum,
+            itemsPerPage: limitNum
+        }
+    });
 });
 
 // Obtener una categoría por ID
