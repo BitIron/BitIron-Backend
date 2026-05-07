@@ -33,11 +33,26 @@ const realizarCheckout = catchAsync(async (req, res, next) => {
 
 const obtenerHistorial = catchAsync(async (req, res, next) => {
     const { idCliente } = req.params;
+    const { page = 1, limit = 5 } = req.query; // Default a 5 pedidos por página
 
-    // Llamamos al modelo para traer el historial completo
-    const historial = await Pedido.obtenerPedidosPorCliente(idCliente);
+    const pageNum = parseInt(page, 10) > 0 ? parseInt(page, 10) : 1;
+    const limitNum = parseInt(limit, 10) > 0 ? parseInt(limit, 10) : 5;
+    const offset = (pageNum - 1) * limitNum;
 
-    res.json(historial);
+    const result = await Pedido.obtenerPedidosPorCliente(idCliente, { limit: limitNum, offset });
+
+    const totalPages = Math.ceil(result.total / limitNum);
+
+    res.json({
+        success: true,
+        data: result.rows,
+        meta: {
+            totalItems: result.total,
+            totalPages: totalPages,
+            currentPage: pageNum,
+            itemsPerPage: limitNum
+        }
+    });
 });
 
 const actualizarEstado = catchAsync(async (req, res, next) => {
