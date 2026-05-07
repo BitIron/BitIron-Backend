@@ -3,14 +3,37 @@ const CustomError = require('../utils/CustomError');
 const catchAsync = require('../utils/catchAsync');
 
 const asesoriaController = {
-  // Obtener todas las asesorías
+  // Obtener todas las asesorías (con paginación)
   getAll: catchAsync(async (req, res, next) => {
+    const { page = 1, limit = 10 } = req.query;
+    const pageNum = parseInt(page, 10) > 0 ? parseInt(page, 10) : 1;
+    const limitNum = parseInt(limit, 10) > 0 ? parseInt(limit, 10) : 10;
+    const offset = (pageNum - 1) * limitNum;
+
+    // 1. Obtener el total
+    const [[{ total }]] = await pool.query('SELECT COUNT(*) as total FROM ASESORIA');
+
+    // 2. Obtener los datos con JOIN, LIMIT y OFFSET
     const [rows] = await pool.query(`
       SELECT a.*, c.NombreCompleto as NombreCliente 
       FROM ASESORIA a 
       JOIN CLIENTE c ON a.IdCliente = c.IdCliente
-    `);
-    res.json(rows);
+      ORDER BY a.FechaInicio DESC
+      LIMIT ? OFFSET ?
+    `, [limitNum, offset]);
+
+    const totalPages = Math.ceil(total / limitNum);
+
+    res.json({
+      success: true,
+      data: rows,
+      meta: {
+        totalItems: total,
+        totalPages: totalPages,
+        currentPage: pageNum,
+        itemsPerPage: limitNum
+      }
+    });
   }),
 
   // Obtener una asesoría por ID

@@ -1,8 +1,9 @@
 const pool = require('../config/db');
 
-const getAll = async () => {
-  const [rows] = await pool.query('SELECT * FROM CATEGORIA');
-  return rows;
+const getAll = async (paginacion = { limit: 10, offset: 0 }) => {
+  const [[{ total }]] = await pool.query('SELECT COUNT(*) as total FROM CATEGORIA');
+  const [rows] = await pool.query('SELECT * FROM CATEGORIA LIMIT ? OFFSET ?', [paginacion.limit, paginacion.offset]);
+  return { rows, total };
 };
 
 const getById = async (id) => {

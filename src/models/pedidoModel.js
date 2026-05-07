@@ -93,17 +93,23 @@ const procesarCheckout = async (idCliente) => {
     }
 };
 
-const obtenerPedidosPorCliente = async (idCliente) => {
-    // 1. Obtenemos los pedidos principales del cliente (ordenados por el más reciente)
-    const [pedidos] = await pool.query(
-        'SELECT IdPedido, FechaPedido, TotalPagar, Estado FROM PEDIDO WHERE IdCliente = ? ORDER BY FechaPedido DESC',
+const obtenerPedidosPorCliente = async (idCliente, paginacion = { limit: 10, offset: 0 }) => {
+    // 1. Obtener el total para la paginación
+    const [[{ total }]] = await pool.query(
+        'SELECT COUNT(*) as total FROM PEDIDO WHERE IdCliente = ?',
         [idCliente]
     );
 
-    // Si no tiene pedidos, devolvemos un array vacío enseguida
-    if (pedidos.length === 0) return [];
+    // 2. Obtenemos los pedidos principales con LIMIT y OFFSET
+    const [pedidos] = await pool.query(
+        'SELECT IdPedido, FechaPedido, TotalPagar, Estado FROM PEDIDO WHERE IdCliente = ? ORDER BY FechaPedido DESC LIMIT ? OFFSET ?',
+        [idCliente, paginacion.limit, paginacion.offset]
+    );
 
-    // 2. Por cada pedido, buscamos sus detalles uniendo con la tabla PRODUCTO
+    // Si no tiene pedidos, devolvemos estructura vacía
+    if (pedidos.length === 0) return { rows: [], total: 0 };
+
+    // 3. Por cada pedido, buscamos sus detalles
     for (let pedido of pedidos) {
         const [detalles] = await pool.query(`
             SELECT 
@@ -116,11 +122,10 @@ const obtenerPedidosPorCliente = async (idCliente) => {
             WHERE dp.IdPedido = ?
         `, [pedido.IdPedido]);
 
-        // Agregamos el array de productos dentro del objeto pedido
         pedido.productos = detalles;
     }
 
-    return pedidos;
+    return { rows: pedidos, total };
 };
 
 const actualizarEstadoPedido = async (idPedido, nuevoEstado) => {
