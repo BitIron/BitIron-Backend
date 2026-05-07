@@ -1,9 +1,10 @@
 const productoModel = require('../models/productoModel');
 const planModel = require('../models/planModel');
 const pool = require('../config/db');
+const catchAsync = require('../utils/catchAsync');
+const CustomError = require('../utils/CustomError');
 
-const generarPlan = async (req, res) => {
-  try {
+const generarPlan = catchAsync(async (req, res, next) => {
     const idCliente = req.usuario.id;
 
     const {
@@ -13,7 +14,7 @@ const generarPlan = async (req, res) => {
     } = req.body;
 
     if (!disciplina || !objetivo || !nivel || !diasEntreno || !tipoDieta || !nivelSuplementacion || !horaEntreno) {
-      return res.status(400).json({ error: 'Faltan parámetros críticos para la generación del plan de alto rendimiento (incluyendo horaEntreno).' });
+      return next(new CustomError('Faltan parámetros críticos para la generación del plan de alto rendimiento (incluyendo horaEntreno).', 400));
     }
 
     const horaNum = parseInt(horaEntreno.split(':')[0]);
@@ -452,22 +453,12 @@ Al indicarnos que entrenas sobre las ${horaEntreno}, hemos estructurado tus comi
       suplementosRecomendados,
       tiendaRecomendaciones
     });
+});
 
-  } catch (error) {
-    console.error('Error crítico al procesar la programación avanzada:', error);
-    return res.status(500).json({ error: 'Error interno del servidor al generar el plan de élite.' });
-  }
-};
-
-const getHistorial = async (req, res) => {
-  try {
-    const [planes] = await pool.query('SELECT * FROM ASESORIA WHERE IdCliente = ?', [req.usuario.id]);
-    return res.status(200).json(planes);
-  } catch (error) {
-    console.error('Error al obtener el historial:', error);
-    return res.status(500).json({ error: 'Error interno del servidor al obtener el historial.' });
-  }
-};
+const getHistorial = catchAsync(async (req, res, next) => {
+  const [planes] = await pool.query('SELECT * FROM ASESORIA WHERE IdCliente = ?', [req.usuario.id]);
+  res.status(200).json(planes);
+});
 
 module.exports = {
   generarPlan,

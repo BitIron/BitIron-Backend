@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const CustomError = require('../utils/CustomError');
 
 const SECRET_KEY = process.env.JWT_SECRET || 'super_secreto_bitiron_123';
 
@@ -7,13 +8,13 @@ const verificarToken = (req, res, next) => {
     
     // Verificar que exista el header Authorization
     if (!authHeader) {
-        return res.status(401).json({ error: 'Acceso denegado. No se proporcionó token.' });
+        return next(new CustomError('Acceso denegado. No se proporcionó token.', 401));
     }
 
     // Extraer token del formato "Bearer <token>"
     const token = authHeader.split(' ')[1];
     if (!token) {
-        return res.status(401).json({ error: 'Formato de token inválido.' });
+        return next(new CustomError('Formato de token inválido.', 401));
     }
 
     try {
@@ -24,15 +25,13 @@ const verificarToken = (req, res, next) => {
         req.usuario = datosDescifrados;
         next();
     } catch (error) {
-        return res.status(403).json({ error: 'Token inválido o expirado.' });
+        return next(new CustomError('Token inválido o expirado.', 403));
     }
 };
 
 const esAdmin = (req, res, next) => {
     if (req.usuario.rol !== 'admin') { 
-        return res.status(403).json({ 
-            error: 'Acceso denegado: Se requieren permisos de Administrador para esta acción.' 
-        });
+        return next(new CustomError('Acceso denegado: Se requieren permisos de Administrador para esta acción.', 403));
     }
     next();
 };
