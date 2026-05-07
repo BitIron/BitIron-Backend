@@ -42,12 +42,16 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, async () => {
-  console.log(`Server is running on port ${PORT}`);
-  try {
-    await pool.query('SELECT 1');
-    console.log('✅ Conexión exitosa a la base de datos Bit-Iron');
-  } catch (error) {
-    console.error('❌ Error al conectar a la base de datos:', error);
-  }
-});
+if (require.main === module) {
+  app.listen(PORT, async () => {
+    console.log(`Server is running on port ${PORT}`);
+    try {
+      await pool.query('SELECT 1');
+      console.log('✅ Conexión exitosa a la base de datos Bit-Iron');
+    } catch (error) {
+      console.error('❌ Error al conectar a la base de datos:', error);
+    }
+  });
+}
+
+module.exports = app;
