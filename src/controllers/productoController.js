@@ -1,6 +1,7 @@
 const Producto = require('../models/productoModel');
+const CustomError = require('../utils/CustomError');
 
-const getAll = async (req, res) => {
+const getAll = async (req, res, next) => {
   try {
     const { nombre, idCategoria, page = 1, limit = 10 } = req.query;
 
@@ -19,6 +20,7 @@ const getAll = async (req, res) => {
     const totalPages = Math.ceil(result.total / limitNum);
 
     res.json({
+      success: true,
       data: result.rows,
       meta: {
         totalItems: result.total,
@@ -29,27 +31,27 @@ const getAll = async (req, res) => {
     });
   } catch (error) {
     console.error('Error al obtener productos:', error);
-    res.status(500).json({ message: 'Error interno del servidor', error: error.message });
+    return next(new CustomError('Error interno del servidor', 500));
   }
 };
 
-const getById = async (req, res) => {
+const getById = async (req, res, next) => {
   try {
     const { id } = req.params;
     const rows = await Producto.getById(id);
 
     if (rows.length === 0) {
-      return res.status(404).json({ message: 'Producto no encontrado' });
+      return next(new CustomError('Producto no encontrado', 404));
     }
 
     res.json(rows[0]);
   } catch (error) {
     console.error('Error al obtener producto por ID:', error);
-    res.status(500).json({ message: 'Error interno del servidor', error: error.message });
+    return next(new CustomError('Error interno del servidor', 500));
   }
 };
 
-const create = async (req, res) => {
+const create = async (req, res, next) => {
   try {
     const result = await Producto.create(req.body);
 
@@ -59,53 +61,53 @@ const create = async (req, res) => {
     });
   } catch (error) {
     console.error('Error al crear producto:', error);
-    res.status(500).json({ message: 'Error al crear producto', error: error.message });
+    return next(new CustomError('Error al crear producto', 500));
   }
 };
 
-const update = async (req, res) => {
+const update = async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await Producto.update(id, req.body);
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ message: 'Producto no encontrado para actualizar' });
+      return next(new CustomError('Producto no encontrado para actualizar', 404));
     }
 
     res.json({ message: 'Producto actualizado exitosamente' });
   } catch (error) {
     console.error('Error al actualizar producto:', error);
-    res.status(500).json({ message: 'Error al actualizar producto', error: error.message });
+    return next(new CustomError('Error al actualizar producto', 500));
   }
 };
 
-const deleteProducto = async (req, res) => {
+const deleteProducto = async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await Producto.delete(id);
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ message: 'Producto no encontrado para eliminar' });
+      return next(new CustomError('Producto no encontrado para eliminar', 404));
     }
 
     res.json({ message: 'Producto eliminado exitosamente' });
   } catch (error) {
     console.error('Error al eliminar producto:', error);
-    res.status(500).json({ message: 'Error al eliminar producto', error: error.message });
+    return next(new CustomError('Error al eliminar producto', 500));
   }
 };
 
-const aplicarDescuentoMarca = async (req, res) => {
+const aplicarDescuentoMarca = async (req, res, next) => {
   try {
     const { marca, porcentaje } = req.body;
 
     if (!marca || !porcentaje) {
-      return res.status(400).json({ message: 'La marca y el porcentaje son obligatorios' });
+      return next(new CustomError('La marca y el porcentaje son obligatorios', 400));
     }
 
     // El porcentaje no debe ser mayor a 100 ni menor a 0
     if (porcentaje <= 0 || porcentaje > 100) {
-      return res.status(400).json({ message: 'El porcentaje debe estar entre 1 y 100' });
+      return next(new CustomError('El porcentaje debe estar entre 1 y 100', 400));
     }
 
     await Producto.aplicarDescuentoMarca(marca, porcentaje);
@@ -115,7 +117,7 @@ const aplicarDescuentoMarca = async (req, res) => {
     });
   } catch (error) {
     console.error('Error al aplicar descuento por marca:', error);
-    res.status(500).json({ message: 'Error al aplicar el descuento', error: error.message });
+    return next(new CustomError('Error al aplicar el descuento', 500));
   }
 };
 

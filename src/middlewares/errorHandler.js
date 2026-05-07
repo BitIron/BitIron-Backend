@@ -1,15 +1,14 @@
 const errorHandler = (err, req, res, next) => {
-    console.error("🚨 ERROR INTERCEPTADO:");
+    err.statusCode = err.statusCode || 500;
+    
+    // Log del error para el desarrollador
+    console.error("🚨 ERROR:");
     console.error(err.stack);
 
-    const statusCode = err.statusCode || 500;
-
-    const mensaje = err.message || 'Error interno del servidor. Por favor, inténtalo más tarde.';
-
-    res.status(statusCode).json({
+    res.status(err.statusCode).json({
         success: false,
-        status: statusCode,
-        error: mensaje
+        status: err.statusCode,
+        error: err.message || 'Error interno del servidor.'
     });
 };
 
