@@ -1,4 +1,7 @@
 require('dotenv').config();
+const checkEnv = require('./config/checkEnv');
+checkEnv();
+
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
