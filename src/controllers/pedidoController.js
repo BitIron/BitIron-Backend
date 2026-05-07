@@ -1,11 +1,12 @@
 const Pedido = require('../models/pedidoModel');
+const CustomError = require('../utils/CustomError');
 
-const realizarCheckout = async (req, res) => {
+const realizarCheckout = async (req, res, next) => {
     try {
         const { IdCliente } = req.body;
 
         if (!IdCliente) {
-            return res.status(400).json({ message: 'El IdCliente es obligatorio.' });
+            return next(new CustomError('El IdCliente es obligatorio.', 400));
         }
 
         // Llamamos a la "magia" en el modelo (la transacción SQL)
@@ -25,15 +26,15 @@ const realizarCheckout = async (req, res) => {
             error.message.includes('Stock insuficiente') ||
             error.message.includes('ya no existe')
         ) {
-            return res.status(400).json({ error: error.message });
+            return next(new CustomError(error.message, 400));
         }
 
         // Si es un error inesperado (base de datos caída, etc.), devolvemos 500
-        res.status(500).json({ error: 'Error interno del servidor al procesar el pedido.' });
+        return next(new CustomError('Error interno del servidor al procesar el pedido.', 500));
     }
 };
 
-const obtenerHistorial = async (req, res) => {
+const obtenerHistorial = async (req, res, next) => {
     try {
         const { idCliente } = req.params;
 
@@ -43,30 +44,30 @@ const obtenerHistorial = async (req, res) => {
         res.json(historial);
     } catch (error) {
         console.error('Error al obtener el historial de pedidos:', error);
-        res.status(500).json({ error: 'Error interno del servidor al obtener el historial.' });
+        return next(new CustomError('Error interno del servidor al obtener el historial.', 500));
     }
 };
 
-const actualizarEstado = async (req, res) => {
+const actualizarEstado = async (req, res, next) => {
     try {
         const { idPedido } = req.params;
         const { nuevoEstado } = req.body;
 
         const estadosValidos = ['Pendiente', 'Pagado', 'Enviado', 'Entregado', 'Cancelado'];
         if (!estadosValidos.includes(nuevoEstado)) {
-            return res.status(400).json({ error: 'Estado no válido.' });
+            return next(new CustomError('Estado no válido.', 400));
         }
 
         const actualizado = await Pedido.actualizarEstadoPedido(idPedido, nuevoEstado);
 
         if (!actualizado) {
-            return res.status(404).json({ error: 'Pedido no encontrado.' });
+            return next(new CustomError('Pedido no encontrado.', 404));
         }
 
         res.json({ success: true, message: 'Estado del pedido actualizado con éxito.' });
     } catch (error) {
         console.error('Error al actualizar el estado del pedido:', error);
-        res.status(500).json({ success: false, error: 'Error interno del servidor.' });
+        return next(new CustomError('Error interno del servidor.', 500));
     }
 };
 
