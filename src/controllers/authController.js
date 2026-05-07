@@ -1,119 +1,101 @@
 const pool = require('../config/db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const catchAsync = require('../utils/catchAsync');
+const CustomError = require('../utils/CustomError');
 
 const SECRET_KEY = process.env.JWT_SECRET || 'super_secreto_bitiron_123';
 
-const registro = async (req, res) => {
-    try {
-        const { nombreCompleto, email, password } = req.body;
+const registro = catchAsync(async (req, res, next) => {
+    const { nombreCompleto, email, password } = req.body;
 
-        // Verificar si el email ya existe
-        const [usuariosExistentes] = await pool.query('SELECT * FROM CLIENTE WHERE Email = ?', [email]);
-        if (usuariosExistentes.length > 0) {
-            return res.status(409).json({ error: 'El email ya está en uso.' });
-        }
-
-        // Hashear la contraseña antes de guardarla
-        const saltRounds = 10;
-        const passwordHash = await bcrypt.hash(password, saltRounds);
-
-        // Insertar usuario con rol 'cliente' por defecto
-        const queryInsert = 'INSERT INTO CLIENTE (NombreCompleto, Email, Password_Hash, Rol) VALUES (?, ?, ?, ?)';
-        const [resultado] = await pool.query(queryInsert, [nombreCompleto, email, passwordHash, 'cliente']);
-
-        return res.status(201).json({
-            mensaje: 'Usuario registrado exitosamente.',
-            idCliente: resultado.insertId
-        });
-    } catch (error) {
-        console.error('Error en el registro:', error);
-        return res.status(500).json({ error: 'Error interno del servidor.' });
+    // Verificar si el email ya existe
+    const [usuariosExistentes] = await pool.query('SELECT * FROM CLIENTE WHERE Email = ?', [email]);
+    if (usuariosExistentes.length > 0) {
+        return next(new CustomError('El email ya está en uso.', 409));
     }
-};
 
-const login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
+    // Hashear la contraseña antes de guardarla
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
 
-        // Buscar al usuario por su email
-        const [usuarios] = await pool.query('SELECT * FROM CLIENTE WHERE Email = ?', [email]);
-        if (usuarios.length === 0) {
-            return res.status(401).json({ error: 'Credenciales inválidas.' });
-        }
+    // Insertar usuario con rol 'cliente' por defecto
+    const queryInsert = 'INSERT INTO CLIENTE (NombreCompleto, Email, Password_Hash, Rol) VALUES (?, ?, ?, ?)';
+    const [resultado] = await pool.query(queryInsert, [nombreCompleto, email, passwordHash, 'cliente']);
 
-        const usuario = usuarios[0];
+    res.status(201).json({
+        mensaje: 'Usuario registrado exitosamente.',
+        idCliente: resultado.insertId
+    });
+});
 
-        // Comparar contraseña plana contra el hash
-        const passwordValido = await bcrypt.compare(password, usuario.Password_Hash);
-        if (!passwordValido) {
-            return res.status(401).json({ error: 'Credenciales inválidas.' });
-        }
+const login = catchAsync(async (req, res, next) => {
+    const { email, password } = req.body;
 
-        // Generar JWT con duración de 24 horas
-        const payload = {
+    // Buscar al usuario por su email
+    const [usuarios] = await pool.query('SELECT * FROM CLIENTE WHERE Email = ?', [email]);
+    if (usuarios.length === 0) {
+        return next(new CustomError('Credenciales inválidas.', 401));
+    }
+
+    const usuario = usuarios[0];
+
+    // Comparar contraseña plana contra el hash
+    const passwordValido = await bcrypt.compare(password, usuario.Password_Hash);
+    if (!passwordValido) {
+        return next(new CustomError('Credenciales inválidas.', 401));
+    }
+
+    // Generar JWT con duración de 24 horas
+    const payload = {
+        id: usuario.IdCliente,
+        rol: usuario.Rol,
+        email: usuario.Email
+    };
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '24h' });
+
+    res.status(200).json({
+        mensaje: 'Inicio de sesión exitoso.',
+        token: token,
+        usuario: {
             id: usuario.IdCliente,
-            rol: usuario.Rol,
-            email: usuario.Email
-        };
-        const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '24h' });
-
-        return res.status(200).json({
-            mensaje: 'Inicio de sesión exitoso.',
-            token: token,
-            usuario: {
-                id: usuario.IdCliente,
-                nombre: usuario.NombreCompleto,
-                rol: usuario.Rol
-            }
-        });
-    } catch (error) {
-        console.error('Error en el login:', error);
-        return res.status(500).json({ error: 'Error interno del servidor.' });
-    }
-};
-
-const perfil = async (req, res) => {
-    try {
-        // req.usuario viene inyectado por el middleware verificarToken
-        const { id } = req.usuario;
-
-        const [rows] = await pool.query(
-            'SELECT IdCliente, NombreCompleto, Email, Rol, ObjetivoFitness FROM CLIENTE WHERE IdCliente = ?',
-            [id]
-        );
-
-        if (rows.length === 0) {
-            return res.status(404).json({ error: 'Usuario no encontrado.' });
+            nombre: usuario.NombreCompleto,
+            rol: usuario.Rol
         }
+    });
+});
 
-        return res.status(200).json({ usuario: rows[0] });
-    } catch (error) {
-        console.error('Error al obtener perfil:', error);
-        return res.status(500).json({ error: 'Error interno del servidor.' });
+const perfil = catchAsync(async (req, res, next) => {
+    // req.usuario viene inyectado por el middleware verificarToken
+    const { id } = req.usuario;
+
+    const [rows] = await pool.query(
+        'SELECT IdCliente, NombreCompleto, Email, Rol, ObjetivoFitness FROM CLIENTE WHERE IdCliente = ?',
+        [id]
+    );
+
+    if (rows.length === 0) {
+        return next(new CustomError('Usuario no encontrado.', 404));
     }
-};
 
-const updatePerfil = async (req, res) => {
-    try {
-        const id = req.usuario.id; // Obtenido del token por el middleware
-        const { nombreCompleto, objetivoFitness } = req.body;
+    res.status(200).json({ usuario: rows[0] });
+});
 
-        const [result] = await pool.query(
-            'UPDATE CLIENTE SET NombreCompleto = ?, ObjetivoFitness = ? WHERE IdCliente = ?',
-            [nombreCompleto, objetivoFitness, id]
-        );
+const updatePerfil = catchAsync(async (req, res, next) => {
+    const id = req.usuario.id; // Obtenido del token por el middleware
+    const { nombreCompleto, objetivoFitness } = req.body;
 
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ error: 'Usuario no encontrado.' });
-        }
+    const [result] = await pool.query(
+        'UPDATE CLIENTE SET NombreCompleto = ?, ObjetivoFitness = ? WHERE IdCliente = ?',
+        [nombreCompleto, objetivoFitness, id]
+    );
 
-        return res.status(200).json({ mensaje: 'Perfil actualizado correctamente.' });
-    } catch (error) {
-        console.error('Error al actualizar perfil:', error);
-        return res.status(500).json({ error: 'Error interno del servidor.' });
+    if (result.affectedRows === 0) {
+        return next(new CustomError('Usuario no encontrado.', 404));
     }
-};
+
+    res.status(200).json({ mensaje: 'Perfil actualizado correctamente.' });
+});
 
 module.exports = {
     registro,

@@ -1,71 +1,61 @@
 const Carrito = require('../models/carritoModel');
+const catchAsync = require('../utils/catchAsync');
+const CustomError = require('../utils/CustomError');
 
-const getCarrito = async (req, res) => {
-    try {
-        const { idCliente } = req.params;
-        const items = await Carrito.getByCliente(idCliente);
-        res.json(items);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
+const getCarrito = catchAsync(async (req, res, next) => {
+    const { idCliente } = req.params;
+    const items = await Carrito.getByCliente(idCliente);
+    res.json(items);
+});
 
-const agregarAlCarrito = async (req, res) => {
+const agregarAlCarrito = catchAsync(async (req, res, next) => {
+    const { IdCliente, IdProducto, Cantidad } = req.body;
     try {
-        const { IdCliente, IdProducto, Cantidad } = req.body;
         await Carrito.add(IdCliente, IdProducto, Cantidad);
         res.status(201).json({ message: "Agregado al carrito" });
     } catch (error) {
         if (error.message.includes("Stock insuficiente") || error.message.includes("Producto no encontrado")) {
-            return res.status(400).json({ error: error.message });
+            return next(new CustomError(error.message, 400));
         }
-        res.status(500).json({ error: error.message });
+        throw error;
     }
-};
+});
 
-const eliminarDelCarrito = async (req, res) => {
-    try {
-        const { id } = req.params; // IdCarrito a eliminar
-        const result = await Carrito.remove(id);
-        
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: "Producto no encontrado en el carrito" });
-        }
-        
-        res.json({ message: "Producto eliminado del carrito" });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+const eliminarDelCarrito = catchAsync(async (req, res, next) => {
+    const { id } = req.params; // IdCarrito a eliminar
+    const result = await Carrito.remove(id);
+    
+    if (result.affectedRows === 0) {
+        return next(new CustomError("Producto no encontrado en el carrito", 404));
     }
-};
+    
+    res.json({ message: "Producto eliminado del carrito" });
+});
 
-const actualizarCantidad = async (req, res) => {
+const actualizarCantidad = catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const { Cantidad } = req.body;
+    
     try {
-        const { id } = req.params;
-        const { Cantidad } = req.body;
-        
         const result = await Carrito.updateCantidad(id, Cantidad);
         
         if (result.affectedRows === 0) {
-            return res.status(404).json({ message: "Producto no encontrado en el carrito" });
+            return next(new CustomError("Producto no encontrado en el carrito", 404));
         }
         
         res.json({ message: "Cantidad actualizada correctamente" });
     } catch (error) {
         if (error.message.includes("Stock insuficiente") || error.message.includes("Producto no encontrado")) {
-            return res.status(400).json({ error: error.message });
+            return next(new CustomError(error.message, 400));
         }
-        res.status(500).json({ error: error.message });
+        throw error;
     }
-};
+});
 
-const vaciarCarrito = async (req, res) => {
-    try {
-        const { idCliente } = req.params;
-        const result = await Carrito.clear(idCliente);
-        res.json({ message: "Carrito vaciado correctamente", productosEliminados: result.affectedRows });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
+const vaciarCarrito = catchAsync(async (req, res, next) => {
+    const { idCliente } = req.params;
+    const result = await Carrito.clear(idCliente);
+    res.json({ message: "Carrito vaciado correctamente", productosEliminados: result.affectedRows });
+});
 
-module.exports = { getCarrito, agregarAlCarrito, eliminarDelCarrito, actualizarCantidad, vaciarCarrito };
+module.exports = { getCarrito, agregarAlCarrito, eliminarDelCarrito, actualizarCantidad, vaciarCarrito };
