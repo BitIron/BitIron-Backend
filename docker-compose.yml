@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: bitiron-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: bitiron_db
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_USER: user_bitiron
+      MYSQL_PASSWORD: password_bitiron
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/mysql
+
+  app:
+    build: .
+    container_name: bitiron-app
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: db
+      DB_USER: user_bitiron
+      DB_PASSWORD: password_bitiron
+      DB_NAME: bitiron_db
+      DB_PORT: 3306
+      JWT_SECRET: super_secreto_bitiron_123
+    depends_on:
+      - db
+
+volumes:
+  db_data:
