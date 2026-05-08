@@ -4,190 +4,164 @@ REST API for BitIron, a fitness e-commerce platform built with Node.js and Expre
 
 ---
 
-## Tech Stack
+## 🚀 Tech Stack
 
-- **Runtime:** Node.js
+- **Runtime:** Node.js 20+
 - **Framework:** Express 5
 - **Database:** MariaDB (via `mysql2`)
 - **Auth:** JWT + bcryptjs
-- **Validation:** express-validator
+- **Validation:** `express-validator` (Centralized pipelines)
 - **Testing:** Jest
-- **CI:** GitHub Actions
+- **CI/CD:** GitHub Actions
+- **Containerization:** Docker & Docker Compose
 
 ---
 
-## Getting Started
+## 🏗️ Advanced Architecture Highlights
+
+This backend is designed with maintainability, robustness, and clean code principles in mind.
+
+### 1. Centralized Error Handling (`catchAsync` & `CustomError`)
+We have completely eliminated repetitive `try-catch` blocks across all controllers. Every asynchronous controller is wrapped in a higher-order function (`catchAsync`), which automatically catches promise rejections and forwards them to a global Express error-handling middleware. Custom operational errors are managed via a `CustomError` class, ensuring consistent API error responses (e.g., standardizing status codes and JSON error messages).
+
+### 2. Validation Pipelines (`express-validator`)
+Input validation is decoupled from the business logic. We use `express-validator` to declare rules at the route level. A central validation middleware (`validateResult.js`) intercepts the request, checks for schema violations, and immediately returns a `400 Bad Request` with detailed property-level error descriptions if validation fails. This guarantees that controllers only process clean, expected data.
+
+### 3. Fail-Fast Environment Validation
+The application uses a strict startup check (`checkEnv.js`). If any critical environment variable (like `DB_PASS` or `JWT_SECRET`) is missing, the Node process halts immediately with exit code `1`. This prevents silent failures or confusing runtime errors in production and CI environments.
+
+---
+
+## 🛠️ Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- MariaDB / MySQL running locally
+- Node.js 20+ (for local bare-metal development)
+- Docker Desktop / Engine & Docker Compose (for containerized deployment)
 
-### Installation
+### Option A: Running with Docker (Recommended)
 
-```bash
-git clone https://github.com/BitIron/BitIron-Backend.git
-cd BitIron-Backend
-npm install
-```
+The easiest way to get the entire stack (API + Database) running without installing local dependencies is using Docker Compose.
 
-### Environment variables
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/BitIron/BitIron-Backend.git
+   cd BitIron-Backend
+   ```
+2. Build and spin up the containers in detached mode:
+   ```bash
+   docker-compose up -d --build
+   ```
+   *Note: This will automatically spin up the MariaDB container, initialize the schema using `db/init.sql`, and start the Node.js API on port 3000.*
 
-Copy `.env.example` to `.env` and fill in your values:
+3. To stop the containers:
+   ```bash
+   docker-compose down
+   ```
 
-```bash
-cp .env.example .env
-```
+### Option B: Local Bare-Metal Setup
 
-```env
-DB_HOST=localhost
-DB_USER=root
-DB_PASS=yourpassword
-DB_NAME=bitiron_db
-DB_PORT=3306
-JWT_SECRET=your_jwt_secret
-PORT=3000
-```
+If you prefer running the Node application directly on your machine:
 
-### Database setup
+1. Clone and install dependencies:
+   ```bash
+   npm install
+   ```
 
-Run the init script to create all tables, constraints, stored procedures and seed data:
+2. Copy the environment variables template and configure your values:
+   ```bash
+   cp .env.example .env
+   ```
+   Ensure your `.env` contains:
+   ```env
+   DB_HOST=localhost
+   DB_USER=root
+   DB_PASS=1234
+   DB_NAME=bitiron_db
+   DB_PORT=3306
+   JWT_SECRET=super_secreto_bitiron_123
+   PORT=3000
+   ```
 
-```bash
-mysql -u root -p < db/init.sql
-```
+3. Initialize the database locally:
+   ```bash
+   mysql -u root -p < db/init.sql
+   ```
+   *(Optional)* To populate the database with a premium testing catalog (24 top-tier products like LifePro, Gymshark, Optimum Nutrition):
+   ```bash
+   mysql -u root -p bitiron_db < db/seed_25_productos.sql
+   ```
 
-Optionally, load 100 product records for development:
-
-```bash
-mysql -u root -p bitiron_db < db/seed_100_productos.sql
-```
-
-### Run the server
-
-```bash
-npm run dev     # development
-npm start       # production
-```
+4. Run the server:
+   ```bash
+   npm run dev     # Development mode (nodemon)
+   npm start       # Production mode
+   ```
 
 ---
 
-## API Reference
+## 📡 API Reference
 
-Base URL: `http://localhost:3000/api`
+**Base URL:** `http://localhost:3000/api`
 
-All protected routes require the header:
+Protected routes require the `Authorization` header:
+```http
+Authorization: Bearer <your_jwt_token>
 ```
-Authorization: Bearer <token>
-```
 
----
-
-### Auth
-
+### Authentication
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
 | POST | `/auth/registro` | — | Register a new user |
 | POST | `/auth/login` | — | Login and get JWT token |
 | GET | `/auth/perfil` | User | Get current user profile |
 
-**Login response:**
-```json
-{
-  "token": "eyJ...",
-  "usuario": { "id": 1, "nombre": "Juan Garcia", "rol": "cliente" }
-}
-```
-
----
-
 ### Categories
-
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
-| GET | `/categorias` | — | List all categories |
+| GET | `/categorias` | — | List categories (Paginated) |
 | GET | `/categorias/:id` | — | Get category by ID |
 | POST | `/categorias` | — | Create category |
 | PUT | `/categorias/:id` | — | Update category |
-| DELETE | `/categorias/:id` | — | Delete category (blocked if it has products) |
-
-> **Business logic:** deleting a category that has associated products returns `400`. Products must be reassigned first.
-
----
+| DELETE | `/categorias/:id` | — | Delete category (Blocked if it has associated products) |
 
 ### Products
-
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
-| GET | `/productos` | — | List products (with filters and pagination) |
+| GET | `/productos` | — | List products (Paginated) |
 | GET | `/productos/:id` | — | Get product by ID |
 | POST | `/productos` | Admin | Create product |
 | PUT | `/productos/:id` | Admin | Update product |
 | DELETE | `/productos/:id` | Admin | Delete product |
-| POST | `/productos/descuento` | Admin | Apply % discount to all products of a brand |
 
-**Query params for GET /productos:**
+**Query params for GET collections (Pagination & Filters):**
+- `page` (default: 1)
+- `limit` (default: 10)
+- `nombre` (partial string match)
+- `idCategoria`
 
-| Param | Example | Description |
-|-------|---------|-------------|
-| `nombre` | `?nombre=proteina` | Filter by name (partial match) |
-| `idCategoria` | `?idCategoria=1` | Filter by category |
-| `page` | `?page=2` | Page number (default: 1) |
-| `limit` | `?limit=10` | Items per page (default: 10) |
-
----
-
-### Cart
-
+### Cart & Checkout (Pedidos)
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
 | GET | `/carrito/:idCliente` | — | Get cart items for a client |
-| POST | `/carrito` | — | Add product to cart |
-| PUT | `/carrito/:id` | — | Update item quantity |
+| POST | `/carrito` | — | Add product to cart (Validates stock) |
 | DELETE | `/carrito/:id` | — | Remove item from cart |
-| DELETE | `/carrito/clear/:idCliente` | — | Clear entire cart |
+| POST | `/pedidos/checkout` | — | Convert cart to order (Reduces stock) |
+| GET | `/pedidos/cliente/:idCliente` | — | Get paginated order history |
 
-> **Business logic:** adding or updating an item checks available stock in the database. Returns `400` if stock is insufficient.
-
----
-
-### Orders
-
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/pedidos/checkout` | — | Convert cart to order (reduces stock) |
-| GET | `/pedidos/cliente/:idCliente` | — | Get order history for a client |
-
----
-
-### Advisory Plans
-
+### Advisory Plans (Asesorías)
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
 | POST | `/planes/generar` | User | Generate personalized training + diet plan |
-| GET | `/planes/historial` | User | Get plan history for the current user |
-
-**Body for POST /planes/generar:**
-```json
-{
-  "disciplina": "musculacion",
-  "objetivo": "volumen",
-  "nivel": "intermedio",
-  "diasEntreno": 4,
-  "tipoDieta": "alta en proteinas",
-  "nivelSuplementacion": "avanzado",
-  "comidasAlDia": 5,
-  "horaEntreno": "18:00"
-}
-```
+| GET | `/planes/historial` | User | Get paginated plan history for the logged-in user |
 
 ---
 
-## Data Model
+## 🗄️ Data Model & Database
 
-The database consists of 8 tables:
+The database consists of 8 tables with relational integrity:
 
-```
+```text
 CATEGORIA ──< PRODUCTO ──< DETALLE_PEDIDO >── PEDIDO >── CLIENTE
                    │                                        │
                    └──────────── CARRITO >─────────────────┘
@@ -196,73 +170,63 @@ CATEGORIA ──< PRODUCTO ──< DETALLE_PEDIDO >── PEDIDO >── CLIENTE
                                                       LOG_SISTEMA
 ```
 
-**Stored procedure:** `sp_aplicar_descuento_marca(marca, porcentaje)` — applies a percentage discount to all products of a given brand and logs the operation in `LOG_SISTEMA`.
+### Stored Procedures
+- `sp_aplicar_descuento_marca(p_marca, p_porcentaje)`: Safely applies a percentage discount to all products of a specific brand using a database transaction, and registers the operation inside the `LOG_SISTEMA` table for auditing.
 
 ---
 
-## Testing
+## 📁 Project Structure
 
-Unit tests cover the core business logic utility functions:
+```text
+src/
+├── config/         # DB connection pool & environment validation
+├── controllers/    # Route handlers (Business logic)
+├── middlewares/    # JWT Auth, Global Error Handler
+├── models/         # Raw SQL queries (Data access layer)
+├── routes/         # Express routers mapping
+├── utils/          # Pure functions, CatchAsync utility
+└── validators/     # express-validator schemas
 
+tests/
+├── integration/    # API endpoints testing
+└── unit/           # Business logic utility testing
+
+db/                 # SQL Schemas and Seed Data
+```
+
+---
+
+## 🧪 Testing
+
+The project uses `Jest` for both Unit and Integration testing.
+GitHub Actions automatically runs the entire test suite on every Push and Pull Request.
+
+To run tests locally:
 ```bash
 npm test
 ```
 
-Tests are located in `tests/unit/utils.test.js` and cover:
-- Password validation rules
-- Stock validation before adding to cart
-- Discount percentage validation
+---
 
-GitHub Actions runs the test suite automatically on every push and pull request to `main` and `develop`.
+## 🔀 Gitflow Model
+
+This repository follows a strict Gitflow branching strategy to maintain code stability:
+
+- `main` — Stable production releases.
+- `develop` — Integration branch for testing new features.
+- `feature/*` — Feature branches.
+- `fix/*` — Bug and hotfixes.
+
+All changes must go through a Peer-Reviewed **Pull Request** before being merged into `develop`.
 
 ---
 
-## Project Structure
+## 🔑 Test Credentials
 
-```
-src/
-├── config/         # Database connection pool
-├── controllers/    # Route handlers
-├── middlewares/    # Auth middleware, error handler
-├── models/         # Database queries
-├── routes/         # Express routers
-├── utils/          # Pure business logic utilities
-└── validators/     # express-validator rules
+For local development and testing purposes only:
 
-tests/
-└── unit/           # Jest unit tests
-
-db/
-├── init.sql        # Schema, constraints, stored procedure and seed data
-└── seed_100_productos.sql
-
-.github/
-└── workflows/
-    └── ci.yml      # GitHub Actions CI pipeline
-```
-
----
-
-## Gitflow
-
-This project follows the Gitflow branching model:
-
-- `main` — stable production releases
-- `develop` — integration branch
-- `feature/*` — new features
-- `docs/*` — documentation changes
-- `fix/*` — bug fixes
-
-All changes go through **Pull Requests** with peer review before merging into `develop`.
-
----
-
-## Test Credentials
-
-For local development only:
-
-| Email | Password | Role |
-|-------|----------|------|
-| admin@bitiron.com | Admin1234! | admin |
-| juan@example.com | Cliente1234! | cliente |
-| ana@example.com | Cliente1234! | cliente |
+| Role | Email | Password |
+|------|-------|----------|
+| **Admin** | admin@bitiron.com | Admin1234! |
+| **Client** | juan@example.com | Cliente1234! |
+| **Client** | ana@example.com | Cliente1234! |
