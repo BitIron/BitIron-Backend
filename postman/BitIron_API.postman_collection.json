@@ -109,12 +109,22 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/categorias",
+              "raw": "{{baseUrl}}/categorias?page=1&limit=5",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "categorias"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
               ]
             }
           }
@@ -488,7 +498,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/pedidos/cliente/1",
+              "raw": "{{baseUrl}}/pedidos/cliente/1?page=1&limit=5",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -496,6 +506,16 @@
                 "pedidos",
                 "cliente",
                 "1"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
               ]
             }
           }
@@ -516,13 +536,23 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/planes/historial",
+              "raw": "{{baseUrl}}/planes/historial?page=1&limit=5",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "planes",
                 "historial"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
               ]
             }
           }
