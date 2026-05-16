@@ -3,13 +3,14 @@ const catchAsync = require('../utils/catchAsync');
 const CustomError = require('../utils/CustomError');
 
 const getCarrito = catchAsync(async (req, res, next) => {
-    const { idCliente } = req.params;
+    const idCliente = req.usuario.id;
     const items = await Carrito.getByCliente(idCliente);
     res.json(items);
 });
 
 const agregarAlCarrito = catchAsync(async (req, res, next) => {
-    const { IdCliente, IdProducto, Cantidad } = req.body;
+    const IdCliente = req.usuario.id;
+    const { IdProducto, Cantidad } = req.body;
     try {
         await Carrito.add(IdCliente, IdProducto, Cantidad);
         res.status(201).json({ message: "Agregado al carrito" });
@@ -53,7 +54,7 @@ const actualizarCantidad = catchAsync(async (req, res, next) => {
 });
 
 const vaciarCarrito = catchAsync(async (req, res, next) => {
-    const { idCliente } = req.params;
+    const idCliente = req.usuario.id;
     const result = await Carrito.clear(idCliente);
     res.json({ message: "Carrito vaciado correctamente", productosEliminados: result.affectedRows });
 });
