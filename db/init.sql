@@ -139,12 +139,12 @@ INSERT INTO CATEGORIA (IdCategoria, Nombre, Descripcion) VALUES
 (2, 'Equipamiento',   'Cinturones, straps y accesorios de gimnasio.'),
 (3, 'Ropa Fitness',   'Textil deportivo de alta calidad.');
 
-INSERT INTO PRODUCTO (IdProducto, Nombre, Descripcion, Precio, Stock, Genero, Marca, ObjetivoRecomendado, IdCategoria) VALUES
-(1, 'Proteina Whey Isolate', 'Aislado de suero.',       45.99, 50,  'unisex', 'Optimum',   'Volumen',    1),
-(2, 'Creatina Monohidrato',  'Pura 100% sin sabor.',    24.50, 120, 'unisex', 'MyProtein', 'Volumen',    1),
-(3, 'Cinturon Powerlifting', 'Cuero 10mm palanca.',     55.00, 15,  'hombre', 'RDX',       'Fuerza',     2),
-(4, 'Camiseta Oversize',     'Algodon premium negro.',  22.00, 60,  'unisex', 'BIT-ITRON', 'Estetica',   3),
-(5, 'Quemador L-Carnitina',  'Acelera perdida grasa.',  19.99, 40,  'unisex', 'Amix',      'Definicion', 1);
+INSERT INTO PRODUCTO (IdProducto, Nombre, Descripcion, Precio, Stock, Imagen_Url, Genero, Marca, ObjetivoRecomendado, IdCategoria) VALUES
+(1, 'Proteina Whey Isolate', 'Aislado de suero.',       45.99, 50,  '/assets/products/lifepro_gold_whey.png', 'unisex', 'Optimum',   'Volumen',    1),
+(2, 'Creatina Monohidrato',  'Pura 100% sin sabor.',    24.50, 120, '/assets/products/lifepro_creapure.png', 'unisex', 'MyProtein', 'Volumen',    1),
+(3, 'Cinturon Powerlifting', 'Cuero 10mm palanca.',     55.00, 15,  '/assets/products/sbd_belt.png', 'hombre', 'RDX',       'Fuerza',     2),
+(4, 'Camiseta Oversize',     'Algodon premium negro.',  22.00, 60,  '/assets/products/gymshark_pump_cover.png', 'unisex', 'BIT-ITRON', 'Estetica',   3),
+(5, 'Quemador L-Carnitina',  'Acelera perdida grasa.',  19.99, 40,  '/assets/products/amix_c4.png', 'unisex', 'Amix',      'Definicion', 1);
 
 -- =========================================================================
 -- CREDENCIALES DE PRUEBA (para desarrollo local)
