@@ -379,6 +379,54 @@ Al indicarnos que entrenas sobre las ${horaEntreno}, hemos estructurado tus comi
         const productosEncontrados = resultados.flat();
         const idsAgregados = new Set();
 
+        const inyectarSimulado = (palabra) => {
+          let nombreSim = `Premium ${palabra}`;
+          let descSim = `Suplemento avanzado de ${palabra} de grado farmacéutico formulado para optimizar el rendimiento atlético.`;
+          let precioSim = 24.99;
+          let imgSim = null;
+
+          if (palabra.toLowerCase() === 'gel') {
+            nombreSim = 'BitIron Energy Gel 60g (Glucosa/Fructosa 2:1)';
+            descSim = 'Gel energético avanzado de absorción ultra-rápida. Evita la fatiga gástrica y aporta 40g de carbohidratos.';
+            precioSim = 2.50;
+            imgSim = '/assets/products/bitiron_energy_gel.png';
+          } else if (palabra.toLowerCase() === 'isotonico') {
+            nombreSim = 'BitIron Isotonic Electrolyte Stack';
+            descSim = 'Bebida isotónica con ratio óptimo de sodio, potasio y magnesio para evitar calambres y deshidratación.';
+            precioSim = 14.90;
+            imgSim = '/assets/products/bitiron_isotonico.png';
+          } else if (palabra.toLowerCase() === 'magnesio') {
+            nombreSim = 'Bisglicinato de Magnesio Quelado 120 caps';
+            descSim = 'Magnesio de alta biodisponibilidad. Mejora el descanso, la contracción y reduce el estrés del SNC.';
+            precioSim = 18.99;
+            imgSim = '/assets/products/lifepro_zma.png';
+          } else if (palabra.toLowerCase() === 'proteina') {
+            nombreSim = 'BitIron Whey Protein Concentrate 1kg';
+            descSim = 'Concentrado de suero de máxima pureza sabor Doble Chocolate. 24g de proteína por toma.';
+            precioSim = 29.99;
+            imgSim = '/assets/products/myprotein_whey.png';
+          } else if (palabra.toLowerCase() === 'creatina') {
+            nombreSim = 'Creatina Monohidrato Ultrapura 300g';
+            descSim = 'Creatina monohidratada micronizada. Aumenta la fuerza explosiva y resíntesis de ATP.';
+            precioSim = 22.50;
+            imgSim = '/assets/products/lifepro_creapure.png';
+          } else if (palabra.toLowerCase() === 'pre-entreno') {
+            nombreSim = 'BitIron Pre-Workout Nitric Oxidizer';
+            descSim = 'Fórmula extrema de bombeo y foco cognitivo con L-Citrulina, Beta-Alanina y cafeína anhidra.';
+            precioSim = 32.00;
+            imgSim = '/assets/products/amix_c4.png';
+          }
+
+          suplementosRecomendados.push({
+            IdProducto: `GEN-${palabra.toUpperCase()}`,
+            Nombre: nombreSim,
+            Descripcion: descSim,
+            Precio: precioSim,
+            Imagen_Url: imgSim,
+            _simulado: true
+          });
+        };
+
         for (const prod of productosEncontrados) {
           if (!idsAgregados.has(prod.IdProducto)) {
             // Asegurarse de enviar precio e imagen_url
@@ -395,14 +443,7 @@ Al indicarnos que entrenas sobre las ${horaEntreno}, hemos estructurado tus comi
 
         // Si no hay stock real en BD, se generan sugerencias ficticias coherentes (Cross-selling)
         if (suplementosRecomendados.length === 0) {
-          suplementosRecomendados = palabrasClaveSuplementos.map((palabra, index) => ({
-            IdProducto: `GEN-${index + 1}`,
-            Nombre: `[Sugerencia de la Tienda] ${palabra} Premium`,
-            Descripcion: `Suplemento clave de ${palabra} para maximizar tu ${objetivo} y la recuperación fisiológica celular. Búscalo en nuestra sección de productos.`,
-            Precio: 29.99,
-            Imagen_Url: null,
-            _simulado: true
-          }));
+          palabrasClaveSuplementos.forEach(inyectarSimulado);
         }
       } catch (errorDb) {
         console.error("Error al buscar suplementos en la base de datos:", errorDb);
