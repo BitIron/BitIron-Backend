@@ -21,7 +21,7 @@ const Carrito = {
 
     getByCliente: async (idCliente) => {
         const [rows] = await pool.query(`
-      SELECT C.*, P.Nombre, P.Precio 
+      SELECT C.*, P.Nombre, P.Precio, P.Imagen_Url
       FROM CARRITO C 
       JOIN PRODUCTO P ON C.IdProducto = P.IdProducto 
       WHERE C.IdCliente = ?
