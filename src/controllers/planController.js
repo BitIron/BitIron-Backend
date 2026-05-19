@@ -371,12 +371,6 @@ Al indicarnos que entrenas sobre las ${horaEntreno}, hemos estructurado tus comi
       }
 
       try {
-        const promesasBusqueda = palabrasClaveSuplementos.map(palabra =>
-          productoModel.getAll({ nombre: palabra })
-        );
-
-        const resultados = await Promise.all(promesasBusqueda);
-        const productosEncontrados = resultados.flat();
         const idsAgregados = new Set();
 
         const inyectarSimulado = (palabra) => {
@@ -427,23 +421,46 @@ Al indicarnos que entrenas sobre las ${horaEntreno}, hemos estructurado tus comi
           });
         };
 
-        for (const prod of productosEncontrados) {
-          if (!idsAgregados.has(prod.IdProducto)) {
-            // Asegurarse de enviar precio e imagen_url
-            suplementosRecomendados.push({
-              IdProducto: prod.IdProducto,
-              Nombre: prod.Nombre,
-              Descripcion: prod.Descripcion,
-              Precio: prod.Precio,
-              Imagen_Url: prod.Imagen_Url || null
-            });
-            idsAgregados.add(prod.IdProducto);
-          }
-        }
+        for (const palabra of palabrasClaveSuplementos) {
+          // Si busca Proteina, intentamos buscar también "Protein" por la nomenclatura en base de datos
+          const terminos = palabra.toLowerCase() === 'proteina' ? ['Proteina', 'Protein'] : [palabra];
+          let encontradosParaPalabra = [];
 
-        // Si no hay stock real en BD, se generan sugerencias ficticias coherentes (Cross-selling)
-        if (suplementosRecomendados.length === 0) {
-          palabrasClaveSuplementos.forEach(inyectarSimulado);
+          for (const t of terminos) {
+            const resBusqueda = await productoModel.getAll({ nombre: t });
+            if (resBusqueda && resBusqueda.rows && resBusqueda.rows.length > 0) {
+              encontradosParaPalabra.push(...resBusqueda.rows);
+            }
+          }
+
+          if (encontradosParaPalabra.length > 0) {
+            let agregadosDePalabra = 0;
+            for (const prod of encontradosParaPalabra) {
+              const id = prod.IdProducto || prod.idProducto || prod.id_producto || prod.id;
+              const nombre = prod.Nombre || prod.nombre;
+              const desc = prod.Descripcion || prod.descripcion || '';
+              const precio = prod.Precio || prod.precio || 0;
+              const img = prod.Imagen_Url || prod.imagen_url || null;
+
+              if (id && !idsAgregados.has(id)) {
+                suplementosRecomendados.push({
+                  IdProducto: id,
+                  Nombre: nombre,
+                  Descripcion: desc,
+                  Precio: Number(precio),
+                  Imagen_Url: img
+                });
+                idsAgregados.add(id);
+                agregadosDePalabra++;
+              }
+            }
+
+            if (agregadosDePalabra === 0) {
+              inyectarSimulado(palabra);
+            }
+          } else {
+            inyectarSimulado(palabra);
+          }
         }
       } catch (errorDb) {
         console.error("Error al buscar suplementos en la base de datos:", errorDb);
