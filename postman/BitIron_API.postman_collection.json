@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "BitIron API",
-    "description": "Colección completa de endpoints para el proyecto BitIron.",
+    "description": "Colección completa y actualizada de endpoints para el proyecto BitIron.\n\n**Uso:**\n1. Ejecuta 'Login' y copia el token de la respuesta.\n2. Pega el token en la variable de colección `token`.\n3. El resto de peticiones protegidas lo usarán automáticamente.\n\n**Credenciales de prueba:**\n- Admin: admin@bitiron.com / Admin1234!\n- Cliente: juan@example.com / Cliente1234!",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -27,22 +27,13 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombreCompleto\": \"Usuario Test\",\n  \"email\": \"test@example.com\",\n  \"password\": \"123456\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "raw": "{\n  \"nombreCompleto\": \"Usuario Test\",\n  \"email\": \"test@example.com\",\n  \"password\": \"Test1234!\"\n}",
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{baseUrl}}/auth/registro",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "registro"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "registro"]
             }
           }
         },
@@ -54,47 +45,79 @@
             "body": {
               "mode": "raw",
               "raw": "{\n  \"nombreCompleto\": \"Al\",\n  \"email\": \"correoFalsoSinArroba\",\n  \"password\": \"123\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{baseUrl}}/auth/registro",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "registro"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "registro"]
             }
           }
         },
         {
-          "name": "Login",
+          "name": "Login (Admin)",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@bitiron.com\",\n  \"password\": \"hash_3\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "raw": "{\n  \"email\": \"admin@bitiron.com\",\n  \"password\": \"Admin1234!\"\n}",
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{baseUrl}}/auth/login",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "login"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login (Cliente)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"juan@example.com\",\n  \"password\": \"Cliente1234!\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Obtener Perfil (Req Token)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/perfil",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "perfil"]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Perfil (Req Token)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreCompleto\": \"Juan Actualizado\",\n  \"objetivoFitness\": \"Ganar masa muscular\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/perfil",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "perfil"]
             }
           }
         }
@@ -110,21 +133,11 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/categorias?page=1&limit=5",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "categorias"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["categorias"],
               "query": [
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "5"
-                }
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "5" }
               ]
             }
           }
@@ -136,13 +149,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/categorias/1",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "categorias",
-                "1"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["categorias", "1"]
             }
           }
         },
@@ -154,20 +162,12 @@
             "body": {
               "mode": "raw",
               "raw": "{\n  \"Nombre\": \"Nueva Categoria\",\n  \"Descripcion\": \"Descripción de prueba\",\n  \"Imagen_Url\": \"\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{baseUrl}}/categorias",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "categorias"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["categorias"]
             }
           }
         },
@@ -179,38 +179,24 @@
             "body": {
               "mode": "raw",
               "raw": "{\n  \"Nombre\": \"Categoría Actualizada\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{baseUrl}}/categorias/1",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "categorias",
-                "1"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["categorias", "1"]
             }
           }
         },
         {
-          "name": "Eliminar Categoría",
+          "name": "Eliminar Categoría (con productos → error)",
           "request": {
             "method": "DELETE",
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/categorias/1",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "categorias",
-                "1"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["categorias", "1"]
             }
           }
         }
@@ -226,29 +212,13 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/productos?nombre=whey&idCategoria=1&page=1&limit=5",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "productos"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["productos"],
               "query": [
-                {
-                  "key": "nombre",
-                  "value": "whey"
-                },
-                {
-                  "key": "idCategoria",
-                  "value": "1"
-                },
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "5"
-                }
+                { "key": "nombre", "value": "whey" },
+                { "key": "idCategoria", "value": "1" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "5" }
               ]
             }
           }
@@ -260,13 +230,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/productos/1",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "productos",
-                "1"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["productos", "1"]
             }
           }
         },
@@ -275,28 +240,17 @@
           "request": {
             "method": "POST",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
+              { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"Nombre\": \"Nuevo Producto Test\",\n  \"Descripcion\": \"Prueba\",\n  \"Precio\": 29.99,\n  \"Stock\": 10,\n  \"Genero\": \"unisex\",\n  \"Marca\": \"BIT-ITRON\",\n  \"ObjetivoRecomendado\": \"Volumen\",\n  \"IdCategoria\": 1\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "raw": "{\n  \"Nombre\": \"Nuevo Producto Test\",\n  \"Descripcion\": \"Prueba de creación\",\n  \"Precio\": 29.99,\n  \"Stock\": 10,\n  \"Genero\": \"unisex\",\n  \"Marca\": \"BitIron\",\n  \"ObjetivoRecomendado\": \"volumen\",\n  \"IdCategoria\": 1\n}",
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{baseUrl}}/productos",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "productos"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["productos"]
             }
           }
         },
@@ -305,29 +259,17 @@
           "request": {
             "method": "PUT",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
+              { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"Precio\": 35.00,\n  \"Stock\": 20\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{baseUrl}}/productos/1",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "productos",
-                "1"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["productos", "1"]
             }
           }
         },
@@ -336,20 +278,12 @@
           "request": {
             "method": "DELETE",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
+              { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
               "raw": "{{baseUrl}}/productos/1",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "productos",
-                "1"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["productos", "1"]
             }
           }
         }
@@ -359,105 +293,82 @@
       "name": "Carrito",
       "item": [
         {
-          "name": "Obtener Carrito de Cliente",
+          "name": "Obtener Carrito (Req Token)",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/carrito/1",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "carrito",
-                "1"
-              ]
+              "raw": "{{baseUrl}}/carrito",
+              "host": ["{{baseUrl}}"],
+              "path": ["carrito"]
             }
           }
         },
         {
-          "name": "Agregar al Carrito",
+          "name": "Agregar al Carrito (Req Token)",
           "request": {
             "method": "POST",
-            "header": [],
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"IdCliente\": 1,\n  \"IdProducto\": 2,\n  \"Cantidad\": 1\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "raw": "{\n  \"IdProducto\": 2,\n  \"Cantidad\": 1\n}",
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{baseUrl}}/carrito",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "carrito"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["carrito"]
             }
           }
         },
         {
-          "name": "Actualizar Cantidad en Carrito",
+          "name": "Actualizar Cantidad en Carrito (Req Token)",
           "request": {
             "method": "PUT",
-            "header": [],
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"Cantidad\": 3\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{baseUrl}}/carrito/1",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "carrito",
-                "1"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["carrito", "1"]
             }
           }
         },
         {
-          "name": "Eliminar del Carrito",
+          "name": "Eliminar Item del Carrito (Req Token)",
           "request": {
             "method": "DELETE",
-            "header": [],
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "url": {
               "raw": "{{baseUrl}}/carrito/1",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "carrito",
-                "1"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["carrito", "1"]
             }
           }
         },
         {
-          "name": "Vaciar Carrito",
+          "name": "Vaciar Carrito Completo (Req Token)",
           "request": {
             "method": "DELETE",
-            "header": [],
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/carrito/clear/1",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "carrito",
-                "clear",
-                "1"
-              ]
+              "raw": "{{baseUrl}}/carrito/clear",
+              "host": ["{{baseUrl}}"],
+              "path": ["carrito", "clear"]
             }
           }
         }
@@ -467,124 +378,152 @@
       "name": "Pedidos",
       "item": [
         {
-          "name": "Realizar Checkout",
+          "name": "Realizar Checkout (Req Token)",
           "request": {
             "method": "POST",
-            "header": [],
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"IdCliente\": 1\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{baseUrl}}/pedidos/checkout",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "pedidos",
-                "checkout"
+              "host": ["{{baseUrl}}"],
+              "path": ["pedidos", "checkout"]
+            }
+          }
+        },
+        {
+          "name": "Historial de Pedidos del Cliente (Req Token)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pedidos/cliente/1?page=1&limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["pedidos", "cliente", "1"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "5" }
               ]
             }
           }
         },
         {
-          "name": "Historial de Pedidos",
+          "name": "Actualizar Estado Pedido (Req Token Admin)",
           "request": {
-            "method": "GET",
-            "header": [],
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nuevoEstado\": \"Enviado\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
             "url": {
-              "raw": "{{baseUrl}}/pedidos/cliente/1?page=1&limit=5",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "pedidos",
-                "cliente",
-                "1"
-              ],
-              "query": [
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "5"
-                }
-              ]
+              "raw": "{{baseUrl}}/pedidos/1/estado",
+              "host": ["{{baseUrl}}"],
+              "path": ["pedidos", "1", "estado"]
             }
           }
         }
       ]
     },
     {
-      "name": "Planes",
+      "name": "Planes (AI Advisor)",
       "item": [
+        {
+          "name": "Generar Plan Personalizado (Req Token)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"disciplina\": \"musculacion\",\n  \"objetivo\": \"volumen\",\n  \"nivel\": \"intermedio\",\n  \"diasEntreno\": 4,\n  \"tipoDieta\": \"omnivoro\",\n  \"comidasAlDia\": 4,\n  \"horaEntreno\": \"17:00\",\n  \"nivelSuplementacion\": \"avanzado\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/planes/generar",
+              "host": ["{{baseUrl}}"],
+              "path": ["planes", "generar"]
+            }
+          }
+        },
         {
           "name": "Historial de Planes (Req Token)",
           "request": {
             "method": "GET",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
+              { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{baseUrl}}/planes/historial?page=1&limit=5",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "planes",
-                "historial"
-              ],
+              "raw": "{{baseUrl}}/planes/historial",
+              "host": ["{{baseUrl}}"],
+              "path": ["planes", "historial"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Asesorías",
+      "item": [
+        {
+          "name": "Obtener Todas las Asesorías (Req Token)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/asesorias?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["asesorias"],
               "query": [
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "5"
-                }
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
               ]
             }
           }
         },
         {
-          "name": "Generar Plan (Req Token)",
+          "name": "Obtener Asesoría por ID (Req Token)",
           "request": {
-            "method": "POST",
+            "method": "GET",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
+              { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"disciplina\": \"gym\",\n  \"objetivo\": \"volumen\",\n  \"nivel\": \"principiante\",\n  \"diasEntreno\": 4,\n  \"tipoDieta\": \"estandar\",\n  \"comidasAlDia\": 4,\n  \"horaEntreno\": \"tarde\",\n  \"nivelSuplementacion\": \"basica\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
             "url": {
-              "raw": "{{baseUrl}}/planes/generar",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "planes",
-                "generar"
-              ]
+              "raw": "{{baseUrl}}/asesorias/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["asesorias", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Obtener Todos los Usuarios (Req Token Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/usuarios",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "usuarios"]
             }
           }
         }
