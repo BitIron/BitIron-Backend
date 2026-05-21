@@ -28,173 +28,173 @@ const generarPlan = catchAsync(async (req, res, next) => {
     // ============================================================================
 
     const glosarioIntensidad = `
-=== METODOLOGÍA DE ÉLITE: CIENCIA Y BIOMECÁNICA ===
-[ PRINCIPIOS DE HIPERTROFIA Y TENSIÓN MECÁNICA ]
-* El mito de "altas repeticiones para definir" es falso. El estímulo debe ser máximo siempre; el déficit calórico hará el resto.
-* Hipertrofia mediada por estiramiento: El crecimiento muscular se maximiza en la fase excéntrica (bajada) y cuando el músculo está elongado. Controla la bajada (2-3 segundos) y haz una pausa de 1 seg en la máxima elongación.
-* Repeticiones Efectivas: Las últimas repeticiones de una serie, cuando la velocidad de la barra disminuye involuntariamente (grinding), son las que reclutan las fibras de alto umbral y generan hipertrofia.
+=== ELITE METHODOLOGY: SCIENCE & BIOMECHANICS ===
+[ PRINCIPLES OF HYPERTROPHY AND MECHANICAL TENSION ]
+* The myth of "high reps to tone" is false. The stimulus must be maximal always; the caloric deficit will do the rest.
+* Stretch-Mediated Hypertrophy: Muscle growth is maximized in the eccentric phase (lowering) and when the muscle is lengthened. Control the eccentric (2-3 seconds) and pause for 1 sec at maximum stretch.
+* Effective Repetitions: The last reps of a set, when bar speed involuntarily slows down (grinding), are the ones that recruit high-threshold fibers and generate hypertrophy.
 
-[ CONCEPTOS DE INTENSIDAD (MÉTODO TS/BO) ]
-* TS (Top Set): Tu serie más pesada del ejercicio. Carga máxima para el rango de reps indicado a RIR 1 (te guardas 1 repetición para no fatigar el SNC prematuramente).
-* BO (Back Off): Serie de volumen tras la pesada. Reduce el peso un 10-15% y ve al FALLO TÉCNICO (RIR 0). La ciencia demuestra que la cercanía al fallo es el principal motor de hipertrofia. Exprime el músculo al máximo con técnica impecable.
-* RIR (Reps In Reserve): Repeticiones que dejas en la recámara. RIR 0 significa que no podrías hacer una repetición más con buena técnica.
+[ INTENSITY CONCEPTS (TS/BO METHOD) ]
+* TS (Top Set): Your heaviest set of the exercise. Max load for the indicated rep range at RIR 1 (you keep 1 rep in the tank to avoid premature CNS fatigue).
+* BO (Back Off): Volume set after the heavy one. Drop the weight by 10-15% and go to TECHNICAL FAILURE (RIR 0). Science shows proximity to failure is the main driver of hypertrophy. Squeeze the muscle to the max with flawless technique.
+* RIR (Reps In Reserve): Reps left in the tank. RIR 0 means you couldn't do one more rep with good technique.
 ---------------------------------------------------------
 `;
 
     if (disciplina.toLowerCase() === 'musculacion' || disciplina.toLowerCase() === 'mixta') {
 
       const calentamientoTorso = `
-[ CALENTAMIENTO ESPECÍFICO DE TORSO (8 MIN) ]
-1. Liberación miofascial: Pectoral y dorsal con pelota de lacrosse o rodillo (2 min).
-2. Manguito rotador: Rotaciones externas con banda elástica (2 x 15 por brazo).
-3. Movilidad: Dislocaciones de hombro con pica (2 x 15) y rotaciones torácicas.
-4. Aproximación (Potenciación Post-Activación - PAP): 3 series piramidales (50%, 70%, 85% del peso de tu Top Set) solo en el primer ejercicio, haciendo de 2 a 5 repeticiones explosivas para preparar el sistema nervioso sin generar fatiga.
+[ UPPER BODY WARM-UP (8 MIN) ]
+1. Myofascial Release: Pecs and lats with a lacrosse ball or foam roller (2 min).
+2. Rotator Cuff: External rotations with resistance band (2 x 15 per arm).
+3. Mobility: Shoulder dislocates with a PVC pipe (2 x 15) and thoracic rotations.
+4. Warm-up Sets (Post-Activation Potentiation - PAP): 3 pyramid sets (50%, 70%, 85% of your Top Set weight) only on the first exercise, doing 2 to 5 explosive reps to prime the nervous system without fatigue.
 `;
 
       const calentamientoPierna = `
-[ CALENTAMIENTO ESPECÍFICO DE PIERNA (10 MIN) ]
-1. Liberación miofascial: Pasadas con Foam Roller en cuádriceps, banda iliotibial y gemelos (3 min).
-2. Movilidad: Sentadilla profunda isométrica aguantando la posición abajo (2 x 45 seg) para abrir caderas (dorsiflexión de tobillo).
-3. Activación: Zancadas dinámicas sin peso (10 por pierna) y Glute Bridges (2 x 15).
-4. Aproximación (Potenciación Post-Activación - PAP): 3 series subiendo peso progresivamente en tu primer ejercicio básico, bajas repeticiones para activar el SNC.
+[ LOWER BODY WARM-UP (10 MIN) ]
+1. Myofascial Release: Foam Roller on quads, IT band, and calves (3 min).
+2. Mobility: Isometric deep squat holding the bottom position (2 x 45 sec) to open hips (ankle dorsiflexion).
+3. Activation: Bodyweight dynamic lunges (10 per leg) and Glute Bridges (2 x 15).
+4. Warm-up Sets (Post-Activation Potentiation - PAP): 3 progressively heavier sets on your first compound exercise, low reps to prime the CNS.
 `;
 
       let cuerpoRutina = '';
 
       if (diasEntreno <= 3) {
         cuerpoRutina = `
-=== SPLIT 3 DÍAS: FULL BODY AVANZADO ===
-DÍA 1: FULL BODY A (Foco Cuádriceps y Empuje)
+=== 3-DAY SPLIT: ADVANCED FULL BODY ===
+DAY 1: FULL BODY A (Quad & Push Focus)
 ${calentamientoPierna}
-- Sentadilla Libre (Barra): 1 TS (5-8 reps, RIR 1) + 2 BO (10-12 reps, RIR 0/Fallo)
-- Press Banca Plano (Barra): 1 TS (5-8 reps, RIR 1) + 2 BO (10-12 reps, RIR 0/Fallo)
-- Remo con Barra (Pendlay): 3 series (8-10 reps, RIR 0)
-- Prensa Inclinada 45º: 2 series (12-15 reps, RIR 0)
-- Cruces de Pecho en Polea: 2 series (15 reps, RIR 0)
-- Elevaciones Laterales Mancuerna: 3 series (15-20 reps, RIR 0)
-- Curl Bíceps con Barra Z: 2 series (10-12 reps, RIR 0)
-- Extensión Tríceps Polea: 2 series (12-15 reps, RIR 0)
+- Barbell Squat: 1 TS (5-8 reps, RIR 1) + 2 BO (10-12 reps, RIR 0/Failure)
+- Barbell Bench Press: 1 TS (5-8 reps, RIR 1) + 2 BO (10-12 reps, RIR 0/Failure)
+- Barbell Row (Pendlay): 3 sets (8-10 reps, RIR 0)
+- 45º Leg Press: 2 sets (12-15 reps, RIR 0)
+- Cable Chest Flyes: 2 sets (15 reps, RIR 0)
+- Dumbbell Lateral Raises: 3 sets (15-20 reps, RIR 0)
+- EZ Bar Bicep Curl: 2 sets (10-12 reps, RIR 0)
+- Cable Tricep Extension: 2 sets (12-15 reps, RIR 0)
 
-DÍA 2: FULL BODY B (Foco Cadena Posterior y Tirón)
+DAY 2: FULL BODY B (Posterior Chain & Pull Focus)
 ${calentamientoTorso}
-- Peso Muerto Rumano: 1 TS (6-8 reps, RIR 1) + 2 BO (10-12 reps, RIR 0/Fallo)
-- Press Militar Sentado (Mancuernas): 1 TS (6-8 reps, RIR 1) + 2 BO (10 reps, RIR 0/Fallo)
-- Dominadas Lastradas o Jalón al Pecho: 1 TS (6-8 reps, RIR 1) + 2 BO (10-12 reps, RIR 0/Fallo)
-- Zancadas Búlgaras: 2 series (10-12 reps por pierna, RIR 0)
-- Remo Gironda en Polea Baja: 2 series (12 reps, RIR 0)
-- Face Pull: 3 series (15 reps, RIR 0)
-- Gemelo de pie en máquina: 4 series (15 reps, RIR 0) (Foco en el estiramiento máximo abajo).
+- Romanian Deadlift: 1 TS (6-8 reps, RIR 1) + 2 BO (10-12 reps, RIR 0/Failure)
+- Seated Dumbbell Shoulder Press: 1 TS (6-8 reps, RIR 1) + 2 BO (10 reps, RIR 0/Failure)
+- Weighted Pull-ups or Lat Pulldown: 1 TS (6-8 reps, RIR 1) + 2 BO (10-12 reps, RIR 0/Failure)
+- Bulgarian Split Squats: 2 sets (10-12 reps per leg, RIR 0)
+- Low Cable Row (Gironda): 2 sets (12 reps, RIR 0)
+- Face Pulls: 3 sets (15 reps, RIR 0)
+- Standing Calf Raises: 4 sets (15 reps, RIR 0) (Focus on max stretch at the bottom).
 
-DÍA 3: FULL BODY C (Equilibrio)
+DAY 3: FULL BODY C (Balance)
 ${calentamientoPierna}
-- Press Inclinado (Mancuernas): 1 TS (6-8 reps, RIR 1) + 2 BO (10-12 reps, RIR 0/Fallo)
-- Sentadilla Hack o Multipower: 3 series (10-12 reps, RIR 0)
-- Jalón al Pecho Agarre Estrecho: 3 series (10 reps, RIR 0)
-- Curl Femoral Tumbado: 3 series (12-15 reps, RIR 0)
-- Elevaciones Laterales en Polea: 3 series (15 reps, RIR 0)
-- Curl Martillo con Mancuernas: 2 series (12 reps, RIR 0)
-- Press Francés con Barra: 2 series (12 reps, RIR 0)
-- Planchas Abdominales Lastradas: 3 x 60 seg
+- Incline Dumbbell Press: 1 TS (6-8 reps, RIR 1) + 2 BO (10-12 reps, RIR 0/Failure)
+- Hack Squat or Smith Machine: 3 sets (10-12 reps, RIR 0)
+- Close-Grip Lat Pulldown: 3 sets (10 reps, RIR 0)
+- Lying Leg Curls: 3 sets (12-15 reps, RIR 0)
+- Cable Lateral Raises: 3 sets (15 reps, RIR 0)
+- Dumbbell Hammer Curls: 2 sets (12 reps, RIR 0)
+- Barbell Skull Crushers: 2 sets (12 reps, RIR 0)
+- Weighted Planks: 3 x 60 sec
 `;
       } else if (diasEntreno == 4) {
         cuerpoRutina = `
-=== SPLIT 4 DÍAS: TORSO / PIERNA (ALTA VARIEDAD) ===
-DÍA 1: TORSO PESADO (Empuje Dominante)
+=== 4-DAY SPLIT: UPPER / LOWER (HIGH VARIETY) ===
+DAY 1: HEAVY UPPER (Push Dominant)
 ${calentamientoTorso}
-- Press Banca Plano (Barra): 1 TS (3-5 reps, RIR 1) + 2 BO (8-10 reps, RIR 0/Fallo)
-- Dominadas Lastradas o Jalón Pesado: 1 TS (5-8 reps, RIR 1) + 2 BO (10 reps, RIR 0/Fallo)
-- Press Militar de Pie (Barra): 3 series (8-10 reps, RIR 0)
-- Remo en Polea Baja (Agarre V): 3 series (10-12 reps, RIR 0)
-- Aperturas Inclinadas o Pec-Deck: 2 series (15 reps, RIR 0)
-- Elevaciones Laterales con Mancuernas: 4 series (15 reps, RIR 0)
-- Tríceps Cuerda en Polea Alta: 3 series (12-15 reps, RIR 0)
+- Barbell Bench Press: 1 TS (3-5 reps, RIR 1) + 2 BO (8-10 reps, RIR 0/Failure)
+- Weighted Pull-ups or Heavy Lat Pulldown: 1 TS (5-8 reps, RIR 1) + 2 BO (10 reps, RIR 0/Failure)
+- Standing Barbell Overhead Press: 3 sets (8-10 reps, RIR 0)
+- Low Cable Row (V-Grip): 3 sets (10-12 reps, RIR 0)
+- Incline Flyes or Pec-Deck: 2 sets (15 reps, RIR 0)
+- Dumbbell Lateral Raises: 4 sets (15 reps, RIR 0)
+- Cable Tricep Rope Extension: 3 sets (12-15 reps, RIR 0)
 
-DÍA 2: PIERNA PESADA (Cuádriceps Dominante)
+DAY 2: HEAVY LOWER (Quad Dominant)
 ${calentamientoPierna}
-- Sentadilla Libre: 1 TS (3-5 reps, RIR 1) + 2 BO (8-10 reps, RIR 0/Fallo)
-- Peso Muerto Rumano: 3 series (8-10 reps, RIR 0/Fallo)
-- Prensa Inclinada (Pies juntos y bajos): 3 series (12-15 reps, RIR 0)
-- Extensiones de Cuádriceps: 3 series (15 reps, Fallo Técnico RIR 0 + Drop Set al final)
-- Curl Femoral Sentado: 2 series (12-15 reps, RIR 0)
-- Elevación de Talones de pie (Gemelo): 4 series (15-20 reps, RIR 0)
-- Crunch Abdominal en Polea: 3 series (12-15 reps, RIR 0)
+- Barbell Squat: 1 TS (3-5 reps, RIR 1) + 2 BO (8-10 reps, RIR 0/Failure)
+- Romanian Deadlift: 3 sets (8-10 reps, RIR 0/Failure)
+- Leg Press (Feet low & narrow): 3 sets (12-15 reps, RIR 0)
+- Leg Extensions: 3 sets (15 reps, Technical Failure RIR 0 + Drop Set on last)
+- Seated Leg Curls: 2 sets (12-15 reps, RIR 0)
+- Standing Calf Raises: 4 sets (15-20 reps, RIR 0)
+- Cable Crunches: 3 sets (12-15 reps, RIR 0)
 
-DÍA 3: TORSO HIPERTROFIA (Tirón Dominante)
+DAY 3: HYPERTROPHY UPPER (Pull Dominant)
 ${calentamientoTorso}
-- Remo con Barra: 1 TS (6-8 reps, RIR 1) + 2 BO (10-12 reps, RIR 0/Fallo)
-- Press Inclinado (Mancuernas): 1 TS (8-10 reps, RIR 1) + 2 BO (12 reps, RIR 0/Fallo)
-- Jalón al Pecho Agarre Supino: 3 series (10-12 reps, RIR 0)
-- Fondos en Paralelas (Lastrados): 3 series (8-10 reps, RIR 0)
-- Face Pull (Hombro Posterior): 3 series (15 reps, RIR 0)
-- Curl Bíceps Barra Recta: 3 series (10-12 reps, RIR 0)
-- Extensión Tríceps a una mano (Polea): 2 series (12 reps, RIR 0)
+- Barbell Row: 1 TS (6-8 reps, RIR 1) + 2 BO (10-12 reps, RIR 0/Failure)
+- Incline Dumbbell Press: 1 TS (8-10 reps, RIR 1) + 2 BO (12 reps, RIR 0/Failure)
+- Supinated Lat Pulldown: 3 sets (10-12 reps, RIR 0)
+- Weighted Dips: 3 sets (8-10 reps, RIR 0)
+- Face Pulls (Rear Delts): 3 sets (15 reps, RIR 0)
+- Straight Bar Bicep Curls: 3 sets (10-12 reps, RIR 0)
+- Single Arm Cable Tricep Extension: 2 sets (12 reps, RIR 0)
 
-DÍA 4: PIERNA HIPERTROFIA (Cadena Posterior Dominante)
+DAY 4: HYPERTROPHY LOWER (Posterior Chain Dominant)
 ${calentamientoPierna}
-- Peso Muerto Convencional o Sumo: 1 TS (3-5 reps, RIR 1) + 2 BO (8 reps, RIR 0/Fallo)
-- Sentadilla Búlgara con Mancuernas: 3 series (10-12 reps por pierna, RIR 0)
-- Curl Femoral Tumbado: 3 series (12-15 reps, Fallo en la última RIR 0)
-- Prensa Horizontal (Pies altos y separados): 3 series (15 reps, RIR 0)
-- Hip Thrust (Puente de Glúteo con Barra): 3 series (10-12 reps, RIR 0)
-- Gemelo Sentado (Foco en Sóleo): 4 series (20 reps, RIR 0)
+- Conventional or Sumo Deadlift: 1 TS (3-5 reps, RIR 1) + 2 BO (8 reps, RIR 0/Failure)
+- Dumbbell Bulgarian Split Squats: 3 sets (10-12 reps per leg, RIR 0)
+- Lying Leg Curls: 3 sets (12-15 reps, Failure on last RIR 0)
+- Leg Press (Feet high & wide): 3 sets (15 reps, RIR 0)
+- Barbell Hip Thrusts: 3 sets (10-12 reps, RIR 0)
+- Seated Calf Raises (Soleus Focus): 4 sets (20 reps, RIR 0)
 `;
       } else {
         cuerpoRutina = `
-=== SPLIT 5/6 DÍAS: PUSH / PULL / LEGS / UPPER / LOWER ===
-DÍA 1: PUSH (Empuje)
+=== 5/6-DAY SPLIT: PUSH / PULL / LEGS / UPPER / LOWER ===
+DAY 1: PUSH
 ${calentamientoTorso}
-- Press Banca Plano: 1 TS (5 reps, RIR 1) + 2 BO (8-10 reps, RIR 0/Fallo)
+- Barbell Bench Press: 1 TS (5 reps, RIR 1) + 2 BO (8-10 reps, RIR 0/Failure)
 - Press Militar Sentado (Mancuernas): 1 TS (6-8 reps, RIR 1) + 2 BO (10-12 reps, RIR 0/Fallo)
-- Press Inclinado en Máquina Convergente: 2 series (10-12 reps, RIR 0)
-- Cruces en Polea (Pecho bajo): 2 series (15 reps, RIR 0)
-- Elevaciones Laterales (Polea, unilateral): 3 series (15 reps, RIR 0)
-- Press Francés con Barra Z: 3 series (10-12 reps, RIR 0)
-- Extensión Tríceps Cuerda: 2 series (15 reps, RIR 0)
+- Convergent Machine Incline Press: 2 sets (10-12 reps, RIR 0)
+- Cable Flyes (Low Pecs): 2 sets (15 reps, RIR 0)
+- Lateral Raises (Cable, Unilateral): 3 sets (15 reps, RIR 0)
+- EZ Bar Skull Crushers: 3 sets (10-12 reps, RIR 0)
+- Rope Tricep Extension: 2 sets (15 reps, RIR 0)
 
-DÍA 2: PULL (Tirón)
+DAY 2: PULL
 ${calentamientoTorso}
-- Dominadas Libres o Jalón Abierto: 1 TS (6 reps, RIR 1) + 2 BO (10 reps, RIR 0/Fallo)
-- Remo con Barra (Agarre Prono): 1 TS (6-8 reps, RIR 1) + 2 BO (10-12 reps, RIR 0/Fallo)
-- Pull-over en Polea Alta: 2 series (12-15 reps, RIR 0)
-- Remo en Máquina Unilateral: 2 series (10-12 reps por brazo, RIR 0)
-- Pájaros con Mancuerna (Hombro Posterior): 3 series (15 reps, RIR 0)
-- Curl Bíceps Alterno Mancuernas: 3 series (10 reps, RIR 0)
-- Curl Bíceps en Polea Baja: 2 series (15 reps, RIR 0)
+- Pull-ups or Wide Lat Pulldown: 1 TS (6 reps, RIR 1) + 2 BO (10 reps, RIR 0/Failure)
+- Barbell Row (Pronated Grip): 1 TS (6-8 reps, RIR 1) + 2 BO (10-12 reps, RIR 0/Failure)
+- Straight-Arm Cable Pullover: 2 sets (12-15 reps, RIR 0)
+- Unilateral Machine Row: 2 sets (10-12 reps per arm, RIR 0)
+- Dumbbell Reverse Flyes (Rear Delts): 3 sets (15 reps, RIR 0)
+- Alternating Dumbbell Curls: 3 sets (10 reps, RIR 0)
+- Low Cable Bicep Curls: 2 sets (15 reps, RIR 0)
 
-DÍA 3: LEGS (Piernas Completo)
+DAY 3: LEGS
 ${calentamientoPierna}
-- Sentadilla Libre: 1 TS (5 reps, RIR 1) + 2 BO (8-10 reps, RIR 0/Fallo)
-- Prensa 45 Grados: 3 series (12-15 reps, RIR 0)
-- Zancadas Caminando con Mancuernas: 2 series (12 pasos por pierna, RIR 0)
-- Curl Femoral Tumbado: 3 series (12-15 reps, RIR 0)
-- Elevación de Talones de pie: 4 series (15 reps, RIR 0)
+- Barbell Squat: 1 TS (5 reps, RIR 1) + 2 BO (8-10 reps, RIR 0/Failure)
+- 45 Degree Leg Press: 3 sets (12-15 reps, RIR 0)
+- Dumbbell Walking Lunges: 2 sets (12 steps per leg, RIR 0)
+- Lying Leg Curls: 3 sets (12-15 reps, RIR 0)
+- Standing Calf Raises: 4 sets (15 reps, RIR 0)
 
-DÍA 4: UPPER (Torso Completo - Frecuencia 2)
+DAY 4: UPPER (Full Upper Body - 2x Frequency)
 ${calentamientoTorso}
-- Press Inclinado (Mancuernas o Barra): 1 TS (6-8 reps, RIR 1) + 2 BO (10-12 reps, RIR 0/Fallo)
-- Remo Gironda o en Punta: 3 series (8-10 reps, RIR 0)
-- Press Hombro en Máquina: 3 series (10-12 reps, RIR 0)
-- Jalón al Pecho Agarre Estrecho: 3 series (10-12 reps, RIR 0)
-- Elevaciones Laterales Mancuerna: 3 series (15-20 reps, RIR 0)
-- Superserie: Curl Martillo + Extensión Tríceps Polea: 3 series (12 reps, RIR 0)
+- Incline Press (Dumbbell or Barbell): 1 TS (6-8 reps, RIR 1) + 2 BO (10-12 reps, RIR 0/Failure)
+- T-Bar or Gironda Row: 3 sets (8-10 reps, RIR 0)
+- Machine Shoulder Press: 3 sets (10-12 reps, RIR 0)
+- Close-Grip Lat Pulldown: 3 sets (10-12 reps, RIR 0)
+- Dumbbell Lateral Raises: 3 sets (15-20 reps, RIR 0)
+- Superset: Hammer Curls + Cable Tricep Extension: 3 sets (12 reps, RIR 0)
 
-DÍA 5: LOWER (Piernas - Cadena Posterior)
+DAY 5: LOWER (Posterior Chain)
 ${calentamientoPierna}
-- Peso Muerto Rumano: 1 TS (6-8 reps, RIR 1) + 2 BO (10-12 reps, RIR 0/Fallo)
-- Sentadilla Búlgara en Multipower: 3 series (10 reps por pierna, RIR 0)
-- Extensión Cuádriceps: 3 series (15 reps, RIR 0)
-- Curl Femoral Sentado: 3 series (12 reps, RIR 0)
-- Hip Thrust: 3 series (10 reps, RIR 0)
-- Rueda Abdominal o Planchas Lastradas: 3 series al fallo (RIR 0).
+- Romanian Deadlift: 1 TS (6-8 reps, RIR 1) + 2 BO (10-12 reps, RIR 0/Failure)
+- Smith Machine Bulgarian Split Squats: 3 sets (10 reps per leg, RIR 0)
+- Leg Extensions: 3 sets (15 reps, RIR 0)
+- Seated Leg Curls: 3 sets (12 reps, RIR 0)
+- Hip Thrusts: 3 sets (10 reps, RIR 0)
+- Ab Wheel or Weighted Planks: 3 sets to failure (RIR 0).
 `;
       }
 
       if (disciplina.toLowerCase() === 'mixta') {
         cuerpoRutina += `
-=== BLOQUE DE RESISTENCIA AERÓBICA (ATLETA HÍBRIDO) ===
-Al ser un plan mixto, debes encajar este trabajo sin interferir en tus adaptaciones de hipertrofia (Efecto de Interferencia):
-- Sesión 1 (Base Aeróbica): 45 minutos de Carrera continua o Bicicleta en Zona 2 (60-70% FCM). Debes poder mantener una conversación. Ideal para días de descanso de pesas o post-entreno de torso. Evita el HIIT el día antes de entrenar Pierna pesada.
-- Sesión 2 (Potencia Aeróbica / HIIT): Calentamiento 10 min + 6 series de (40 seg sprint máximo / 80 seg caminar activo) + 10 min vuelta a la calma.
+=== AEROBIC ENDURANCE BLOCK (HYBRID ATHLETE) ===
+Since this is a hybrid plan, you must fit this work without interfering with your hypertrophy adaptations (Interference Effect):
+- Session 1 (Aerobic Base): 45 minutes of steady-state Running or Cycling in Zone 2 (60-70% Max HR). You should be able to hold a conversation. Ideal for weight training rest days or post-upper body workouts. Avoid HIIT the day before heavy Leg training.
+- Session 2 (Aerobic Power / HIIT): 10 min warm-up + 6 sets of (40 sec max sprint / 80 sec active walk) + 10 min cool-down.
 `;
       }
 
@@ -202,25 +202,25 @@ Al ser un plan mixto, debes encajar este trabajo sin interferir en tus adaptacio
 
     } else if (disciplina.toLowerCase() === 'aerobico') {
       rutina = `
-=== PLAN PRO DE RESISTENCIA Y AERÓBICO ===
-Este plan busca mejorar tu VO2 Máximo, tu umbral de lactato y tu economía de esfuerzo mediante bases fisiológicas reales.
+=== PRO ENDURANCE & AEROBIC PLAN ===
+This plan aims to improve your VO2 Max, lactate threshold, and running economy using real physiological principles.
 
-[ CALENTAMIENTO ESPECÍFICO (10-15 MIN) ]
-- Movilidad dinámica de tren inferior: Círculos de cadera, aperturas, balanceo de piernas adelante/atrás y lateral (10 por pierna).
-- Activación de Glúteo Medio: Pasos laterales con banda de resistencia. Fundamental para evitar que las rodillas colapsen hacia adentro (valgo) con la fatiga.
-- 5 minutos de rodaje ultra suave (Zona 1), subiendo pulsaciones progresivamente hasta romper a sudar.
+[ SPECIFIC WARM-UP (10-15 MIN) ]
+- Dynamic lower body mobility: Hip circles, leg swings (forward/back & lateral) (10 per leg).
+- Glute Medius Activation: Lateral band walks. Essential to prevent knee valgus (collapsing inward) under fatigue.
+- 5 minutes of ultra-light jogging (Zone 1), progressively raising heart rate until you break a sweat.
 
-[ TIPS DE RENDIMIENTO AVANZADO Y FISIOLOGÍA ]
-1. Distribución 80/20 (Polarización): El 80% de tu volumen semanal debe ser a baja intensidad (Zona 2). El 20% restante a alta intensidad (Zonas 4 y 5). El error común es hacer todo a intensidad media (Zona 3 o "Black Hole"), generando fatiga excesiva sin adaptaciones cardiovasculares óptimas.
-2. Cadencia: En carrera, busca 170-180 pasos por minuto para reducir el tiempo de contacto con el suelo y el impacto articular. En bici, mantén 85-95 rpm.
-3. Hidratación y Nutrición Intra-Entreno: En sesiones superiores a 60-75 min, es innegociable consumir entre 30-60g de carbohidratos de absorción rápida por hora y unos 500ml de agua con electrolitos (sodio principalmente para prevenir hiponatremia y calambres).
+[ ADVANCED PERFORMANCE & PHYSIOLOGY TIPS ]
+1. 80/20 Distribution (Polarized): 80% of your weekly volume should be low intensity (Zone 2). The remaining 20% at high intensity (Zones 4 and 5). The common mistake is doing everything at moderate intensity (Zone 3 or "Black Hole"), creating excessive fatigue without optimal cardiovascular adaptations.
+2. Cadence: When running, aim for 170-180 steps per minute to reduce ground contact time and joint impact. On the bike, maintain 85-95 rpm.
+3. Intra-Workout Hydration & Nutrition: For sessions over 60-75 mins, it's non-negotiable to consume 30-60g of fast-absorbing carbs per hour and around 500ml of water with electrolytes (mostly sodium to prevent hyponatremia and cramps).
 
-[ PROGRAMACIÓN SEMANAL (${diasEntreno} DÍAS) ]
-- Sesión 1 (Construcción Base y Eficiencia Mitocondrial): 60 a 90 min de rodaje LISS en Zona 2. Foco estricto en mantener las pulsaciones controladas. Si suben, camina. Mejora la oxidación de grasas y el desarrollo de la red capilar.
-- Sesión 2 (Entrenamiento de Umbral de Lactato): 15 min calentamiento + 3 series de 10 min a ritmo de umbral (RPE 7-8/10, ritmo que podrías aguantar 1 hora en carrera) con 3 min de trote suave entre series + 10 min enfriamiento. Enseña a tu cuerpo a aclarar y reciclar lactato más rápido.
-- Sesión 3 (Series / VO2 Max): 15 min calentamiento + 8 a 10 series de (400 metros al 90-95% de tu capacidad / 90 seg de descanso pasivo o caminata) + 10 min enfriamiento. Aumenta la cantidad máxima de oxígeno que el cuerpo puede procesar en la unidad de tiempo.
-- Sesión 4 (Recuperación Activa): 30-40 min de natación o bicicleta estática muy suave para irrigar sangre rica en nutrientes a los músculos dañados y acelerar la recuperación sin sobrecargar el SNC.
-- Sesión 5 (Tirada Larga de Fin de Semana): Aumenta el volumen de la Sesión 1 en un 10-15%. Mentalidad de carrera, prueba aquí tus geles y la estrategia nutricional que usarías el día de la prueba.
+[ WEEKLY PROGRAMMING (${diasEntreno} DAYS) ]
+- Session 1 (Base Building & Mitochondrial Efficiency): 60 to 90 mins LISS in Zone 2. Strict focus on keeping heart rate controlled. If it spikes, walk. Improves fat oxidation and capillary network development.
+- Session 2 (Lactate Threshold Training): 15 min warm-up + 3 sets of 10 mins at threshold pace (RPE 7-8/10, a pace you could hold for 1 hour) with 3 mins light jog between sets + 10 min cool-down. Teaches your body to clear and recycle lactate faster.
+- Session 3 (Intervals / VO2 Max): 15 min warm-up + 8 to 10 sets of (400 meters at 90-95% capacity / 90 sec passive rest or walking) + 10 min cool-down. Increases the maximum amount of oxygen the body can process per unit of time.
+- Session 4 (Active Recovery): 30-40 mins of very light swimming or stationary bike to flush nutrient-rich blood to damaged muscles and accelerate recovery without overloading the CNS.
+- Session 5 (Weekend Long Run): Increase Session 1 volume by 10-15%. Race mentality, test your gels and nutritional strategy you would use on race day here.
 `;
     } else {
       return res.status(400).json({ error: "Disciplina no soportada. Use 'musculacion', 'mixta' o 'aerobico'." });
@@ -257,23 +257,23 @@ Este plan busca mejorar tu VO2 Máximo, tu umbral de lactato y tu economía de e
       calorias = 2500; proteinas = 165; carbos = 280; grasas = 75;
     }
 
-    dieta = `=== PLAN NUTRICIONAL DE ALTO RENDIMIENTO (Base ~70kg) ===\n`;
-    dieta += `Kcal Diarias: ~${calorias} | Proteínas: ${proteinas}g | Carbohidratos: ${carbos}g | Grasas: ${grasas}g\n`;
-    dieta += `Distribución elegida: ${comidasAlDia} comidas diarias.\n\n`;
+    dieta = `=== HIGH PERFORMANCE NUTRITIONAL PLAN (Base ~70kg) ===\n`;
+    dieta += `Daily Kcal: ~${calorias} | Proteins: ${proteinas}g | Carbs: ${carbos}g | Fats: ${grasas}g\n`;
+    dieta += `Chosen Distribution: ${comidasAlDia} daily meals.\n\n`;
 
-    dieta += `[ EL POR QUÉ DE TUS COMIDAS (TIMING Y FISIOLOGÍA NUTRICIONAL) ]
-Al indicarnos que entrenas sobre las ${horaEntreno}, hemos estructurado tus comidas clave:
-* La COMIDA ${preWorkoutMeal} es tu PRE-ENTRENO. Aporta carbohidratos complejos para llenar depósitos de glucógeno hepático y muscular, minimizando la fatiga central y periférica. Moderamos la grasa para acelerar el vaciamiento gástrico.
-* La COMIDA ${postWorkoutMeal} es tu POST-ENTRENO. Foco en proteína de alto valor biológico para superar el "umbral de leucina" (~3g de leucina), encender la vía mTOR (síntesis proteica) y comenzar la regeneración de fibras dañadas en el entrenamiento al fallo.
+    dieta += `[ THE "WHY" BEHIND YOUR MEALS (TIMING & NUTRITIONAL PHYSIOLOGY) ]
+Since you indicated you train around ${horaEntreno}, we have structured your key meals:
+* MEAL ${preWorkoutMeal} is your PRE-WORKOUT. It provides complex carbohydrates to fill hepatic and muscle glycogen stores, minimizing central and peripheral fatigue. We moderate fat to speed up gastric emptying.
+* MEAL ${postWorkoutMeal} is your POST-WORKOUT. Focus on high biological value protein to surpass the "leucine threshold" (~3g of leucine), trigger the mTOR pathway (muscle protein synthesis) and start repairing muscle fibers damaged during training to failure.
 ---------------------------------------------------------\n\n`;
 
     // Generador dinámico del Menú Extenso
     for (let i = 1; i <= comidasAlDia; i++) {
 
-      let tituloComida = `[ COMIDA ${i} ]`;
-      if (i === preWorkoutMeal) tituloComida += " - 🔥 PRE-ENTRENO 🔥";
-      if (i === postWorkoutMeal) tituloComida += " - 🔨 POST-ENTRENO 🔨";
-      if (i === comidasAlDia) tituloComida += " - 🌙 CENA REPARADORA 🌙";
+      let tituloComida = `[ MEAL ${i} ]`;
+      if (i === preWorkoutMeal) tituloComida += " - 🔥 PRE-WORKOUT 🔥";
+      if (i === postWorkoutMeal) tituloComida += " - 🔨 POST-WORKOUT 🔨";
+      if (i === comidasAlDia) tituloComida += " - 🌙 RECOVERY DINNER 🌙";
 
       // Lógica para saber qué TIPO de comida toca según las comidas totales
       let tipoComida = "";
@@ -299,49 +299,49 @@ Al indicarnos que entrenas sobre las ${horaEntreno}, hemos estructurado tus comi
 
       if (tipoDieta.toLowerCase() === 'omnivoro') {
         if (tipoComida === "desayuno_fuerte") {
-          opciones = `- Opción A: 4 Huevos revueltos, 100g de avena cocida con leche, 1 plátano y 30g de nueces.\n- Opción B: 3 Tostadas grandes de masa madre, 150g de pavo, aguacate entero y 1 yogur griego.\n- Opción C: Batido masivo (1.5 scoops proteína, 100g harina avena, 1 plátano, 50g crema de cacahuete, leche entera).`;
+          opciones = `- Option A: 4 Scrambled eggs, 100g oatmeal cooked with milk, 1 banana and 30g walnuts.\n- Option B: 3 Large sourdough toasts, 150g turkey, 1 whole avocado and 1 Greek yogurt.\n- Option C: Massive shake (1.5 scoops whey, 100g oat flour, 1 banana, 50g peanut butter, whole milk).`;
         } else if (tipoComida === "desayuno") {
-          opciones = `- Opción A: 3 Huevos revueltos, 80g de avena y 1 manzana.\n- Opción B: 2 Tostadas, 100g de pavo y medio aguacate.\n- Opción C: Batido (1 scoop proteína, 60g avena, 30g crema cacahuete, leche desnatada).`;
+          opciones = `- Option A: 3 Scrambled eggs, 80g oatmeal and 1 apple.\n- Option B: 2 Toasts, 100g turkey and half an avocado.\n- Option C: Shake (1 scoop whey, 60g oats, 30g peanut butter, skim milk).`;
         } else if (tipoComida === "almuerzo_fuerte") {
-          opciones = `- Opción A: 200g Pechuga de pollo, 150g de arroz (crudo), brócoli y 1 cda de AOVE.\n- Opción B: 200g Ternera magra, 150g pasta y ensalada mixta.\n- Opción C: 2 Latas de atún, 400g patata cocida, ensalada de tomate y pepino.`;
+          opciones = `- Option A: 200g Chicken breast, 150g rice (dry weight), broccoli and 1 tbsp olive oil.\n- Option B: 200g Lean beef, 150g pasta and mixed salad.\n- Option C: 2 Cans of tuna, 400g boiled potato, tomato and cucumber salad.`;
         } else if (tipoComida === "almuerzo") {
-          opciones = `- Opción A: 150g Pollo, 100g arroz y verduras.\n- Opción B: 150g Ternera, 100g pasta y ensalada.\n- Opción C: 150g Lomo de cerdo magro, 250g patata asada, espárragos.`;
+          opciones = `- Option A: 150g Chicken, 100g rice and vegetables.\n- Option B: 150g Beef, 100g pasta and salad.\n- Option C: 150g Lean pork loin, 250g baked potato, asparagus.`;
         } else if (tipoComida === "cena_fuerte") {
-          opciones = `- Opción A: 200g Salmón, 350g patata asada y espárragos.\n- Opción B: Tortilla (3 huevos + 3 claras), 150g pan integral y queso fresco.\n- Opción C: 200g Dorada al horno, 120g quinoa y setas salteadas.\n*Tip Fisiológico: Añade sal con normalidad a la cena. El sodio ayuda a retener fluidos intracelularmente (hidratación celular) y asiste en el cotransporte de glucosa y aminoácidos a las células musculares durante la reparación nocturna.`;
+          opciones = `- Option A: 200g Salmon, 350g baked potato and asparagus.\n- Option B: Omelette (3 whole eggs + 3 egg whites), 150g whole wheat bread and fresh cheese.\n- Option C: 200g Baked sea bream, 120g quinoa and sautéed mushrooms.\n*Physiology Tip: Add salt normally to your dinner. Sodium helps retain fluids intracellularly (cellular hydration) and assists in the cotransport of glucose and amino acids to muscle cells during overnight repair.`;
         } else if (tipoComida === "cena") {
-          opciones = `- Opción A: 150g Salmón, 250g patata asada.\n- Opción B: 150g Merluza, champiñones y 1 rebanada de pan.\n- Opción C: Tortilla francesa (2 huevos + 2 claras) y ensalada grande.\n*Tip Fisiológico: Añade sal con normalidad a la cena. El sodio ayuda a retener fluidos intracelularmente (hidratación celular) y asiste en el cotransporte de glucosa y aminoácidos a las células musculares durante la reparación nocturna.`;
+          opciones = `- Option A: 150g Salmon, 250g baked potato.\n- Option B: 150g Hake, mushrooms and 1 slice of bread.\n- Option C: French omelette (2 eggs + 2 whites) and a large salad.\n*Physiology Tip: Add salt normally to your dinner. Sodium helps retain fluids intracellularly (cellular hydration) and assists in the cotransport of glucose and amino acids to muscle cells during overnight repair.`;
         } else if (tipoComida === "snack_pesado") {
-          opciones = `- Opción A: 1 Yogur griego + 1 scoop de proteína + 30g de almendras.\n- Opción B: 5 Tortitas de arroz con crema de cacahuete y batido Whey.\n- Opción C: 2 Rebanadas de pan integral con 100g de jamón serrano sin grasa.`;
+          opciones = `- Option A: 1 Greek yogurt + 1 scoop whey + 30g almonds.\n- Option B: 5 Rice cakes with peanut butter and a Whey shake.\n- Option C: 2 Slices of whole wheat bread with 100g lean Serrano ham.`;
         } else if (tipoComida === "snack_ligero") {
-          opciones = `- Opción A: 1 Pieza de fruta y 20g de nueces.\n- Opción B: Batido de proteína con agua.\n- Opción C: 3 Tortitas de maíz con pavo.`;
+          opciones = `- Option A: 1 Piece of fruit and 20g walnuts.\n- Option B: Whey protein shake with water.\n- Option C: 3 Corn cakes with turkey breast.`;
         }
 
       } else if (tipoDieta.toLowerCase() === 'vegano') {
         if (tipoComida === "desayuno_fuerte") {
-          opciones = `- Opción A: Porridge (100g avena, 1.5 scoops proteína vegetal, semillas de chía, crema de cacahuete).\n- Opción B: 300g Tofu revuelto (cúrcuma, sal negra) sobre 3 tostadas de centeno y 1 vaso de leche de soja.\n- Opción C: Batido calórico (leche de soja, 1.5 scoops proteína, 2 plátanos, 50g nueces).`;
+          opciones = `- Option A: Porridge (100g oats, 1.5 scoops vegan protein, chia seeds, peanut butter).\n- Option B: 300g Scrambled tofu (turmeric, black salt) on 3 rye toasts and 1 glass of soy milk.\n- Option C: Caloric shake (soy milk, 1.5 scoops protein, 2 bananas, 50g walnuts).`;
         } else if (tipoComida === "desayuno") {
-          opciones = `- Opción A: Porridge (80g avena, 1 scoop proteína vegetal, fresas).\n- Opción B: Tofu revuelto sobre 2 tostadas.\n- Opción C: 2 Tostadas con crema de cacahuete y rodajas de plátano.`;
+          opciones = `- Option A: Porridge (80g oats, 1 scoop vegan protein, strawberries).\n- Option B: Scrambled tofu on 2 toasts.\n- Option C: 2 Toasts with peanut butter and banana slices.`;
         } else if (tipoComida === "almuerzo_fuerte") {
-          opciones = `- Opción A: 250g Tofu firme a la plancha, 120g quinoa y gran salteado de verduras.\n- Opción B: 200g Heura o soja texturizada, 120g pasta de lentejas rojas.\n- Opción C: 300g Garbanzos (escurridos), con 80g arroz basmati y salsa de tomate casera.`;
+          opciones = `- Option A: 250g Grilled firm tofu, 120g quinoa and a large vegetable stir-fry.\n- Option B: 200g Heura or textured soy, 120g red lentil pasta.\n- Option C: 300g Chickpeas (drained), with 80g basmati rice and homemade tomato sauce.`;
         } else if (tipoComida === "almuerzo") {
-          opciones = `- Opción A: 200g Tofu, 80g quinoa y verduras.\n- Opción B: 150g Heura, 100g macarrones de lenteja.\n- Opción C: 200g Lentejas cocidas con arroz y verduras variadas.`;
+          opciones = `- Option A: 200g Tofu, 80g quinoa and vegetables.\n- Option B: 150g Heura, 100g lentil macaroni.\n- Option C: 200g Cooked lentils with rice and mixed vegetables.`;
         } else if (tipoComida === "cena_fuerte") {
-          opciones = `- Opción A: 200g Seitán, 350g patata asada y crema de verduras.\n- Opción B: Hamburguesas de alubias dobles con espinacas y boniato grande asado.\n- Opción C: 250g Tempeh horneado, 100g arroz integral y pimientos.\n*Tip Fisiológico: Añade sal con normalidad a la cena. El sodio ayuda a retener fluidos intracelularmente (hidratación celular) y asiste en el cotransporte de glucosa y aminoácidos a las células musculares durante la reparación nocturna.`;
+          opciones = `- Option A: 200g Seitan, 350g baked potato and vegetable cream.\n- Option B: Double bean burgers with spinach and a large baked sweet potato.\n- Option C: 250g Baked tempeh, 100g brown rice and peppers.\n*Physiology Tip: Add salt normally to your dinner. Sodium helps retain fluids intracellularly (cellular hydration) and assists in the cotransport of glucose and amino acids to muscle cells during overnight repair.`;
         } else if (tipoComida === "cena") {
-          opciones = `- Opción A: 150g Seitán, 250g patata asada.\n- Opción B: Tempeh macerado al horno con salteado.\n- Opción C: Hamburguesa vegetal casera con guarnición de espinacas.\n*Tip Fisiológico: Añade sal con normalidad a la cena. El sodio ayuda a retener fluidos intracelularmente (hidratación celular) y asiste en el cotransporte de glucosa y aminoácidos a las células musculares durante la reparación nocturna.`;
+          opciones = `- Option A: 150g Seitan, 250g baked potato.\n- Option B: Marinated baked tempeh with stir-fry.\n- Option C: Homemade veggie burger with spinach side.\n*Physiology Tip: Add salt normally to your dinner. Sodium helps retain fluids intracellularly (cellular hydration) and assists in the cotransport of glucose and amino acids to muscle cells during overnight repair.`;
         } else if (tipoComida === "snack_pesado") {
-          opciones = `- Opción A: Yogur de soja natural, 1 scoop proteína vegetal y nueces.\n- Opción B: 4 Tortitas de maíz con hummus abundante.\n- Opción C: Bowl de edamames (150g) y 30g de almendras.`;
+          opciones = `- Option A: Plain soy yogurt, 1 scoop vegan protein and walnuts.\n- Option B: 4 Corn cakes with plenty of hummus.\n- Option C: Edamame bowl (150g) and 30g almonds.`;
         } else if (tipoComida === "snack_ligero") {
-          opciones = `- Opción A: Fruta y almendras.\n- Opción B: Batido vegetal pequeño con agua.\n- Opción C: 2 Tortitas de arroz con tahini.`;
+          opciones = `- Option A: Fruit and almonds.\n- Option B: Small vegan protein shake with water.\n- Option C: 2 Rice cakes with tahini.`;
         }
 
       } else { // Flexible
         if (tipoComida.includes("fuerte")) {
-          opciones = `- Elige raciones contundentes. Ejemplo: Gran bowl de cereales y yogur para desayunar, "Bowl culturista" masivo (arroz, proteína magra, salsas zero) para comer y Pizza Fit grande para cenar.\n- Recuerda: Prioriza siempre una fuente rica en leucina en cada ingesta fuerte para maximizar la síntesis de proteína.\n*Tip Fisiológico: Añade sal con normalidad a la cena. El sodio ayuda a retener fluidos intracelularmente (hidratación celular) y asiste en el cotransporte de nutrientes.`;
+          opciones = `- Choose heavy portions. Example: Large cereal and yogurt bowl for breakfast, massive "Bodybuilder bowl" (rice, lean protein, zero sauces) for lunch, and a large Fit Pizza for dinner.\n- Remember: Always prioritize a leucine-rich source in every major meal to maximize protein synthesis.\n*Physiology Tip: Add salt normally to your dinner. Sodium helps retain fluids intracellularly (cellular hydration) and assists in nutrient cotransport.`;
         } else if (tipoComida.includes("snack")) {
-          opciones = `- Snacks IIFYM: Barritas de proteína, tortitas de arroz, fruta o un capricho (galleta/chocolate) siempre que lo cuadres en tus macros.\n- Si tu comida libre es inminente, reduce grasas y carbohidratos en estos snacks.`;
+          opciones = `- IIFYM Snacks: Protein bars, rice cakes, fruit or a treat (cookie/chocolate) as long as it fits your macros.\n- If your cheat meal is coming up, reduce fats and carbs in these snacks.`;
         } else {
-          opciones = `- Opciones estándar: Pescado con patata, fajitas de pollo ajustando macros (tortitas integrales, pollo, verduras), o tostadas con aguacate y pavo.\n- Puedes usar salsas sin azúcar y especias libremente.\n*Tip Fisiológico: Añade sal con normalidad a la cena. El sodio ayuda a retener fluidos intracelularmente (hidratación celular) y asiste en el cotransporte de nutrientes.`;
+          opciones = `- Standard options: Fish with potatoes, chicken fajitas adjusting macros (whole wheat tortillas, chicken, veggies), or toasts with avocado and turkey.\n- You can use sugar-free sauces and spices freely.\n*Physiology Tip: Add salt normally to your dinner. Sodium helps retain fluids intracellularly (cellular hydration) and assists in nutrient cotransport.`;
         }
       }
 
@@ -371,38 +371,96 @@ Al indicarnos que entrenas sobre las ${horaEntreno}, hemos estructurado tus comi
       }
 
       try {
-        const promesasBusqueda = palabrasClaveSuplementos.map(palabra =>
-          productoModel.getAll({ nombre: palabra })
-        );
-
-        const resultados = await Promise.all(promesasBusqueda);
-        const productosEncontrados = resultados.flat();
         const idsAgregados = new Set();
 
-        for (const prod of productosEncontrados) {
-          if (!idsAgregados.has(prod.IdProducto)) {
-            // Asegurarse de enviar precio e imagen_url
-            suplementosRecomendados.push({
-              IdProducto: prod.IdProducto,
-              Nombre: prod.Nombre,
-              Descripcion: prod.Descripcion,
-              Precio: prod.Precio,
-              Imagen_Url: prod.Imagen_Url || null
-            });
-            idsAgregados.add(prod.IdProducto);
-          }
-        }
+        const inyectarSimulado = (palabra) => {
+          let nombreSim = `Premium ${palabra}`;
+          let descSim = `Suplemento avanzado de ${palabra} de grado farmacéutico formulado para optimizar el rendimiento atlético.`;
+          let precioSim = 24.99;
+          let imgSim = null;
 
-        // Si no hay stock real en BD, se generan sugerencias ficticias coherentes (Cross-selling)
-        if (suplementosRecomendados.length === 0) {
-          suplementosRecomendados = palabrasClaveSuplementos.map((palabra, index) => ({
-            IdProducto: `GEN-${index + 1}`,
-            Nombre: `[Sugerencia de la Tienda] ${palabra} Premium`,
-            Descripcion: `Suplemento clave de ${palabra} para maximizar tu ${objetivo} y la recuperación fisiológica celular. Búscalo en nuestra sección de productos.`,
-            Precio: 29.99,
-            Imagen_Url: null,
+          if (palabra.toLowerCase() === 'gel') {
+            nombreSim = 'BitIron Energy Gel 60g (Glucosa/Fructosa 2:1)';
+            descSim = 'Gel energético avanzado de absorción ultra-rápida. Evita la fatiga gástrica y aporta 40g de carbohidratos.';
+            precioSim = 2.50;
+            imgSim = '/assets/products/bitiron_energy_gel.png';
+          } else if (palabra.toLowerCase() === 'isotonico') {
+            nombreSim = 'BitIron Isotonic Electrolyte Stack';
+            descSim = 'Bebida isotónica con ratio óptimo de sodio, potasio y magnesio para evitar calambres y deshidratación.';
+            precioSim = 14.90;
+            imgSim = '/assets/products/bitiron_isotonico.png';
+          } else if (palabra.toLowerCase() === 'magnesio') {
+            nombreSim = 'Bisglicinato de Magnesio Quelado 120 caps';
+            descSim = 'Magnesio de alta biodisponibilidad. Mejora el descanso, la contracción y reduce el estrés del SNC.';
+            precioSim = 18.99;
+            imgSim = '/assets/products/lifepro_zma.png';
+          } else if (palabra.toLowerCase() === 'proteina') {
+            nombreSim = 'BitIron Whey Protein Concentrate 1kg';
+            descSim = 'Concentrado de suero de máxima pureza sabor Doble Chocolate. 24g de proteína por toma.';
+            precioSim = 29.99;
+            imgSim = '/assets/products/myprotein_whey.png';
+          } else if (palabra.toLowerCase() === 'creatina') {
+            nombreSim = 'Creatina Monohidrato Ultrapura 300g';
+            descSim = 'Creatina monohidratada micronizada. Aumenta la fuerza explosiva y resíntesis de ATP.';
+            precioSim = 22.50;
+            imgSim = '/assets/products/lifepro_creapure.png';
+          } else if (palabra.toLowerCase() === 'pre-entreno') {
+            nombreSim = 'BitIron Pre-Workout Nitric Oxidizer';
+            descSim = 'Fórmula extrema de bombeo y foco cognitivo con L-Citrulina, Beta-Alanina y cafeína anhidra.';
+            precioSim = 32.00;
+            imgSim = '/assets/products/amix_c4.png';
+          }
+
+          suplementosRecomendados.push({
+            IdProducto: `GEN-${palabra.toUpperCase()}`,
+            Nombre: nombreSim,
+            Descripcion: descSim,
+            Precio: precioSim,
+            Imagen_Url: imgSim,
             _simulado: true
-          }));
+          });
+        };
+
+        for (const palabra of palabrasClaveSuplementos) {
+          // Si busca Proteina, intentamos buscar también "Protein" por la nomenclatura en base de datos
+          const terminos = palabra.toLowerCase() === 'proteina' ? ['Proteina', 'Protein'] : [palabra];
+          let encontradosParaPalabra = [];
+
+          for (const t of terminos) {
+            const resBusqueda = await productoModel.getAll({ nombre: t });
+            if (resBusqueda && resBusqueda.rows && resBusqueda.rows.length > 0) {
+              encontradosParaPalabra.push(...resBusqueda.rows);
+            }
+          }
+
+          if (encontradosParaPalabra.length > 0) {
+            let agregadosDePalabra = 0;
+            for (const prod of encontradosParaPalabra) {
+              const id = prod.IdProducto || prod.idProducto || prod.id_producto || prod.id;
+              const nombre = prod.Nombre || prod.nombre;
+              const desc = prod.Descripcion || prod.descripcion || '';
+              const precio = prod.Precio || prod.precio || 0;
+              const img = prod.Imagen_Url || prod.imagen_url || null;
+
+              if (id && !idsAgregados.has(id)) {
+                suplementosRecomendados.push({
+                  IdProducto: id,
+                  Nombre: nombre,
+                  Descripcion: desc,
+                  Precio: Number(precio),
+                  Imagen_Url: img
+                });
+                idsAgregados.add(id);
+                agregadosDePalabra++;
+              }
+            }
+
+            if (agregadosDePalabra === 0) {
+              inyectarSimulado(palabra);
+            }
+          } else {
+            inyectarSimulado(palabra);
+          }
         }
       } catch (errorDb) {
         console.error("Error al buscar suplementos en la base de datos:", errorDb);
@@ -421,7 +479,6 @@ Al indicarnos que entrenas sobre las ${horaEntreno}, hemos estructurado tus comi
     // 4. CROSS-SELLING (VENTA CRUZADA)
     // ============================================================================
     
-    const pool = require('../config/db');
     let tiendaRecomendaciones = [];
     
     try {
@@ -445,7 +502,7 @@ Al indicarnos que entrenas sobre las ${horaEntreno}, hemos estructurado tus comi
     const idAsesoria = await planModel.guardarPlanGenerado(idCliente, disciplina, rutina, dieta);
 
     return res.status(200).json({
-      mensaje: "Plan de Alto Rendimiento Generado Correctamente",
+      mensaje: "High Performance Plan Generated Successfully",
       idAsesoria,
       configuracion: { disciplina, objetivo, nivel, diasEntreno, tipoDieta, comidasAlDia, horaEntreno, nivelSuplementacion },
       rutina,
