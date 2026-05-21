@@ -479,7 +479,6 @@ Since you indicated you train around ${horaEntreno}, we have structured your key
     // 4. CROSS-SELLING (VENTA CRUZADA)
     // ============================================================================
     
-    const pool = require('../config/db');
     let tiendaRecomendaciones = [];
     
     try {
