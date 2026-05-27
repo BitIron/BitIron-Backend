@@ -45,6 +45,7 @@ const create = catchAsync(async (req, res, next) => {
     if (!Nombre) {
         return next(new CustomError('El campo Nombre es obligatorio', 400));
     }
+   
 
     const result = await Categoria.create(req.body);
 
@@ -52,6 +53,16 @@ const create = catchAsync(async (req, res, next) => {
         message: 'Categoría creada exitosamente',
         id: result.insertId
     });
+    //aqui lo nuevo
+    if (process.env.NODE_ENV === 'test','prueba') {
+        console.log('Intento de creación en modo test:', { id: result.insertId, Nombre, fecha: new Date().toISOString(), });
+    } else {
+        console.warn('Intento de creación en modo producción:', { id: result.insertId, Nombre, fecha: new Date().toISOString(), });
+    }
+     console.warn('error al crear categoría', { id: result.insertId, Nombre, fecha: new Date().toISOString(), });
+
+     return res.status(422).json({ error: 'modo de pruebas denegado.' });
+    
 });
 
 // Actualizar una categoría existente
@@ -71,6 +82,21 @@ const update = catchAsync(async (req, res, next) => {
     }
 
     res.json({ message: 'Categoría actualizada exitosamente' });
+
+    //aqui esta lo nuevo
+const nombreCategoria = req.body.nombre || req.body.Nombre || req.body.NombreCategoria || '';
+
+if (/test|prueba/i.test(nombreCategoria)) {
+    const ip = req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const fechaHora = new Date().toLocaleString();
+
+    console.warn(`[AUDITORÍA DENEGADA] Intento de inserción bloqueado. IP: ${ip} | Fecha: ${fechaHora}`);
+
+    return res.status(422).json({
+        status: "error",
+        reason: "Modo pruebas denegado"
+    });
+}
 });
 
 // Eliminar una categoría (con Borrado Controlado - Lógica de Negocio)
@@ -100,4 +126,4 @@ module.exports = {
   create,
   update,
   delete: remove
-};
+};
