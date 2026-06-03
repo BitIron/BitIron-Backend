@@ -16,7 +16,7 @@ const planRoutes = require('./routes/planRoutes');
 const authRoutes = require('./routes/authRoutes');
 const asesoriaRoutes = require('./routes/asesoriaRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-
+const reseñaRoutes = require('./routes/ReseñaRoutes');
 const app = express();
 
 // ─── Rate Limiting Global ─────────────────────────────────────────────────────
@@ -40,6 +40,7 @@ app.use('/api/planes', planRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/asesorias', asesoriaRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/resenas', reseñaRoutes);
 
 app.use(errorHandler);
 
