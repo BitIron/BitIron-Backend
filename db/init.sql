@@ -84,6 +84,15 @@ CREATE TABLE LOG_SISTEMA (
     Descripcion TEXT NOT NULL
 );
 
+CREATE TABLE RESEÑAS (
+    IdResena     INT AUTO_INCREMENT PRIMARY KEY,
+    IdProducto   INT NOT NULL,
+    IdCliente    INT NOT NULL,
+    Calificacion INT NOT NULL CHECK (Calificacion >= 1 AND Calificacion <= 5),
+    Comentario   TEXT,
+    FechaResena  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- =========================================================================
 -- 3. RESTRICCIONES (Claves Foráneas y validaciones lógicas)
 -- =========================================================================
@@ -110,6 +119,13 @@ ALTER TABLE CARRITO ADD CONSTRAINT FK_Carrito_Cliente
 ALTER TABLE CARRITO ADD CONSTRAINT FK_Carrito_Producto
     FOREIGN KEY (IdProducto) REFERENCES PRODUCTO(IdProducto) ON DELETE CASCADE;
 
+    ALTER TABLE RESEÑAS ADD CONSTRAINT FK_Resena_Producto
+    FOREIGN KEY (IdProducto) REFERENCES PRODUCTO(IdProducto) ON DELETE CASCADE;
+
+ALTER TABLE RESEÑAS ADD CONSTRAINT FK_Resena_Cliente
+    FOREIGN KEY (IdCliente) REFERENCES CLIENTE(IdCliente) ON DELETE CASCADE;
+
+
 -- Validaciones de Integridad (Check Constraints)
 ALTER TABLE PRODUCTO ADD CONSTRAINT CK_Prod_Precio CHECK (Precio >= 0);
 ALTER TABLE PRODUCTO ADD CONSTRAINT CK_Prod_Stock  CHECK (Stock >= 0);
@@ -117,6 +133,7 @@ ALTER TABLE ASESORIA ADD CONSTRAINT CK_Ases_Precio CHECK (PrecioMensual >= 0);
 ALTER TABLE CLIENTE ADD CONSTRAINT CK_Cliente_Email CHECK (Email LIKE '%@%.%');
 ALTER TABLE DETALLE_PEDIDO ADD CONSTRAINT CK_Detalle_Cant CHECK (Cantidad > 0);
 ALTER TABLE CARRITO ADD CONSTRAINT CK_Carrito_Cant CHECK (Cantidad > 0);
+ALTER TABLE RESEÑAS ADD CONSTRAINT CK_Resana_Calif CHECK (Calificacion >= 1 AND Calificacion <= 5);
 
 -- =========================================================================
 -- 4. PARAMETRIZACIÓN E INSERTS INICIALES (Con Transacciones)
@@ -130,6 +147,7 @@ TRUNCATE TABLE ASESORIA;
 TRUNCATE TABLE PRODUCTO;
 TRUNCATE TABLE CATEGORIA;
 TRUNCATE TABLE CLIENTE;
+TRUNCATE TABLE RESEÑAS;
 SET FOREIGN_KEY_CHECKS = 1;
 
 START TRANSACTION;
@@ -170,6 +188,10 @@ INSERT INTO DETALLE_PEDIDO (IdPedido, IdProducto, Cantidad, PrecioUnitario) VALU
 INSERT INTO CARRITO (IdCliente, IdProducto, Cantidad) VALUES
 (1, 2, 1),
 (2, 5, 2);
+
+INSERT INTO RESEÑAS (IdProducto, IdCliente, Calificacion, Comentario) VALUES
+(1, 1, 5, 'Excelente producto, muy satisfecho.'),
+(2, 2, 4, 'Buen producto, pero un poco caro.');
 
 COMMIT;
 
