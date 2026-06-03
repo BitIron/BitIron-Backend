@@ -84,6 +84,17 @@ CREATE TABLE LOG_SISTEMA (
     Descripcion TEXT NOT NULL
 );
 
+
+CREATE TABLE IF NOT EXISTS RESEÑAS (
+    IdResena INT AUTO_INCREMENT PRIMARY KEY,
+    Puntuacion INT NOT NULL CHECK (Puntuacion BETWEEN 1 AND 5),
+    Comentario TEXT,
+    IdProducto INT NOT NULL,
+   
+);
+
+
+)
 -- =========================================================================
 -- 3. RESTRICCIONES (Claves Foráneas y validaciones lógicas)
 -- =========================================================================
@@ -110,6 +121,10 @@ ALTER TABLE CARRITO ADD CONSTRAINT FK_Carrito_Cliente
 ALTER TABLE CARRITO ADD CONSTRAINT FK_Carrito_Producto
     FOREIGN KEY (IdProducto) REFERENCES PRODUCTO(IdProducto) ON DELETE CASCADE;
 
+ ALTER TABLE RESEÑAS ADD CONSTRAINT Fk_Reseñas_Producto
+    FOREIGN KEY (IdProducto) REFERENCES PRODUCTO(IdProducto) ON DELETE CASCADE:
+
+    
 -- Validaciones de Integridad (Check Constraints)
 ALTER TABLE PRODUCTO ADD CONSTRAINT CK_Prod_Precio CHECK (Precio >= 0);
 ALTER TABLE PRODUCTO ADD CONSTRAINT CK_Prod_Stock  CHECK (Stock >= 0);
@@ -117,6 +132,7 @@ ALTER TABLE ASESORIA ADD CONSTRAINT CK_Ases_Precio CHECK (PrecioMensual >= 0);
 ALTER TABLE CLIENTE ADD CONSTRAINT CK_Cliente_Email CHECK (Email LIKE '%@%.%');
 ALTER TABLE DETALLE_PEDIDO ADD CONSTRAINT CK_Detalle_Cant CHECK (Cantidad > 0);
 ALTER TABLE CARRITO ADD CONSTRAINT CK_Carrito_Cant CHECK (Cantidad > 0);
+ALTER TABLE RESEÑAS ADD CONSTRAINT CK_Reseña_Puntuacion CHECK (Puntuacion > 0 & < 6);
 
 -- =========================================================================
 -- 4. PARAMETRIZACIÓN E INSERTS INICIALES (Con Transacciones)
@@ -130,6 +146,7 @@ TRUNCATE TABLE ASESORIA;
 TRUNCATE TABLE PRODUCTO;
 TRUNCATE TABLE CATEGORIA;
 TRUNCATE TABLE CLIENTE;
+TRUNCATE TABLE RESEÑAS;
 SET FOREIGN_KEY_CHECKS = 1;
 
 START TRANSACTION;
@@ -171,6 +188,9 @@ INSERT INTO CARRITO (IdCliente, IdProducto, Cantidad) VALUES
 (1, 2, 1),
 (2, 5, 2);
 
+INSERT INTO RESEÑAS (IdCliente, IdProducto, IdPedido, Puntuacion) VALUES
+(1, 2, 1 ,'5'),
+(2, 4, 2, '4');
 COMMIT;
 
 -- =========================================================================
