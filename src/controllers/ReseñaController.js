@@ -1,16 +1,17 @@
-const Reseña= require('../models/ReseñaoModel');
+const Reseña= require('../models/ReseñaModel');
 const CustomError = require('../utils/CustomError');
 const catchAsync = require('../utils/catchAsync');
 
 const getAll = catchAsync(async (req, res, next) => {
-  const { nombre, idCategoria, page = 1, limit = 10 } = req.query;
+  const { Reseña, idProducto, page = 1, limit = 10 } = req.query;
 
+  // Convertir a números y asegurar que sean positivos
   const pageNum = parseInt(page, 10) > 0 ? parseInt(page, 10) : 1;
   const limitNum = parseInt(limit, 10) > 0 ? parseInt(limit, 10) : 10;
 
   const offset = (pageNum - 1) * limitNum;
 
-  const filtros = { nombre, idCategoria };
+  const filtros = { Reseña, idProducto };
   const paginacion = { limit: limitNum, offset };
 
   const result = await Reseña.getAll(filtros, paginacion);
@@ -28,6 +29,7 @@ const getAll = catchAsync(async (req, res, next) => {
     }
   });
 });
+
 
 const getById = catchAsync(async (req, res, next) => {
   const { id } = req.params;
@@ -90,5 +92,5 @@ module.exports = {
   getById,
   create,
   update,
-  delete: deleteReseña,
+  deleteReseña: deleteReseña
 };
